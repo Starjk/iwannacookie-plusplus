@@ -1,13 +1,13 @@
 PROGRAM = shoot
 
-SOURCE = root.cc
+SOURCE = firstpstate.cc gameengine.cc menustate.cc pausestate.cc root.cc
 OBJECT = $(SOURCE:.cc=.o)
 
 GXX = g++
 FLAGS = -W -Wall -Werror -pedantic
 DEBUG = -g -ggdb
 CFLAGS = `sdl-config --cflags`
-LFLAGS = `sdl-config --libs`
+LFLAGS = `sdl-config --libs` -lSDL_image
 
 .PHONY: clean all
 
@@ -28,3 +28,5 @@ clean:
 	@rm -rf ${PROGRAM}
 	@find . -name '*.o' -delete -print
 	@find . -name '*~' -delete -print
+
+#EOF

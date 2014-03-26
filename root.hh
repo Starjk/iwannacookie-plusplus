@@ -1,6 +1,9 @@
 #ifndef ROOT_HH_
 # define ROOT_HH_
 
-int	open_window();
+#include <iostream>
+#include <SDL.h>
+
+int	main_loop();
 
 #endif /* ROOT_HH_ */

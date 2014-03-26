@@ -1,0 +1,2 @@
+error: ‘IMG_Load’ was not declared in this scope
+       Was refering to SDL_Image not included and not linked
