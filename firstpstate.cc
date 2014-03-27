@@ -1,5 +1,5 @@
 
-#include <stdio.h>
+#include <iostream>
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -18,29 +18,39 @@ void CFirstPState::Init()
 
     SDL_FreeSurface(temp);
 
-    printf("CFirstPState Init\n");
+    std::cout << "CFirstPState Init" << std::endl;
+
+    bg_focus.x = 0;
+    bg_focus.y = 4400;
+    bg_focus.w = WIDTH;
+    bg_focus.h = HEIGHT;
+
+    player.Init();
 }
 
 void CFirstPState::Cleanup()
 {
     SDL_FreeSurface(background);
 
-    printf("CFirstPState Cleanup\n");
+    std::cout << "CFirstPState Cleanup" << std::endl;
+
+    player.Cleanup();
 }
 
 void CFirstPState::Pause()
 {
-    printf("CFirstPState Pause\n");
+    std::cout << "CFirstPState Pause" << std::endl;
 }
 
 void CFirstPState::Resume()
 {
-    printf("CFirstPState Resume\n");
+    std::cout << "CFirstPState Resume" << std::endl;
 }
 
 void CFirstPState::HandleEvents(CGameEngine	*game)
 {
-    SDL_Event event;
+    Uint8	*keys = SDL_GetKeyState(NULL);
+    SDL_Event	event;
 
     if (SDL_PollEvent(&event)) {
 	switch (event.type) {
@@ -59,10 +69,23 @@ void CFirstPState::HandleEvents(CGameEngine	*game)
 	    default:
 		break;
 	    }
+
 	    break;
 	default:
 	    break;
 	}
+
+	if (keys[SDLK_UP])
+	    player.MoveUp();
+	if (keys[SDLK_DOWN])
+	    player.MoveDown();
+	if (keys[SDLK_LEFT])
+	    player.MoveLeft();
+	if (keys[SDLK_RIGHT])
+	    player.MoveRight();
+	if (keys[SDLK_SPACE])
+	    player.MainWeapon();
+
     }
 }
 
@@ -70,11 +93,14 @@ void CFirstPState::Update(CGameEngine	*game)
 {
     // FIXME: compile flags
     game = game;
+    player.Update();
 }
 
 void CFirstPState::Draw(CGameEngine	*game)
 {
-    SDL_BlitSurface(background, NULL, game->screen, NULL);
+    // FIXME: add increment/+loop in bg_focus/background
+    SDL_BlitSurface(background, &bg_focus, game->screen, NULL);
+    player.Draw(game);
     SDL_UpdateRect(game->screen, 0, 0, 0, 0);
 }
 

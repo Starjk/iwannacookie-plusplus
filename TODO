@@ -1,0 +1,63 @@
+gamestate menu:
+	  background
+	  fader
+
+gamestate lvl1:
+	  background
+	  bg_rectangle
+	  player
+	  vector<foes>
+	  boss
+	  vector<upgrade>
+	  is_win
+	  is_playing
+
+gamestate gameover:
+	  background
+
+gamestate pause:
+	  background
+	  darken
+
+--
+
+gameengine:
+	should keep score and upgrade
+
+gamestate:
+
+--
+
+physengine:
+	singleton
+	handle all movements functions (one obj/rect)
+	handle all collisions detections functions (between 2 obj/rect)
+
+soundengine: (not now)
+	belong to a level (not singleton)
+	handle all noises and musics playing, pausing and init of fmod
+
+grapengine: (not now, not ever probably)
+	singleton
+	handle all animations, such as explosions... mainly...
+	handle all texts displaying (string to vector of surface/letters to print at given position w/ given size)
+
+--
+
+ship/player:
+	belong to a level (not singleton)
+	keep surface, rectangle (hence, position), health, life, speed and has_spawn of ship/player
+
+upgrade:
+	(virtual pure)
+
+foe:
+	belong to a (vector of foes) level
+
+boss:
+	belong to a level
+
+--
+
+FIXME:
+How do I put the physicengine inside player and first state?

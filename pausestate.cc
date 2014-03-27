@@ -1,5 +1,5 @@
 
-#include <stdio.h>
+#include <iostream>
 
 #include "SDL.h"
 #include "gameengine.hh"
@@ -16,24 +16,24 @@ void CPauseState::Init()
 
     SDL_FreeSurface(temp);
 
-    printf("CPauseState Init\n");
+    std::cout << "CPauseState Init" << std::endl;
 }
 
 void CPauseState::Cleanup()
 {
     SDL_FreeSurface(background);
 
-    printf("CPauseState Cleanup\n");
+    std::cout << "CPauseState Cleanup" << std::endl;
 }
 
 void CPauseState::Pause()
 {
-    printf("CPauseState Pause\n");
+    std::cout << "CPauseState Pause" << std::endl;
 }
 
 void CPauseState::Resume()
 {
-    printf("CPauseState Resume\n");
+    std::cout << "CPauseState Resume" << std::endl;
 }
 
 void CPauseState::HandleEvents(CGameEngine	*game)

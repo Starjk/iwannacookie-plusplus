@@ -1,5 +1,5 @@
 
-#include <stdio.h>
+#include <iostream>
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -34,7 +34,7 @@ void CMenuState::Init()
 
     SDL_SetAlpha(fader, SDL_SRCALPHA, alpha);
 
-    printf("CMenuState Init\n");
+    std::cout << "CMenuState Init" << std::endl;
 }
 
 void CMenuState::Cleanup()
@@ -42,17 +42,17 @@ void CMenuState::Cleanup()
     SDL_FreeSurface(background);
     SDL_FreeSurface(fader);
 
-    printf("CMenuState Cleanup\n");
+    std::cout << "CMenuState Cleanup" << std::endl;
 }
 
 void CMenuState::Pause()
 {
-    printf("CMenuState Pause\n");
+    std::cout << "CMenuState Pause" << std::endl;
 }
 
 void CMenuState::Resume()
 {
-    printf("CMenuState Resume\n");
+    std::cout << "CMenuState Resume" << std::endl;
 }
 
 void CMenuState::HandleEvents(CGameEngine	*game)

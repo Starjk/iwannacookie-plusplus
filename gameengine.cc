@@ -29,7 +29,7 @@ void CGameEngine::Init(const char	*title,
     is_fullscreen = fullscreen;
     is_running = true;
 
-    printf("CGameEngine Init\n");
+    std::cout << "CGameEngine Init" << std::endl;
 }
 
 void CGameEngine::Cleanup()
@@ -46,7 +46,7 @@ void CGameEngine::Cleanup()
     if (is_fullscreen)
 	screen = SDL_SetVideoMode(800, 600, 0, 0);
 
-    printf("CGameEngine Cleanup\n");
+    std::cout << "CGameEngine Cleanup" << std::endl;
 
     // $ kill -9 SDL
     SDL_Quit();

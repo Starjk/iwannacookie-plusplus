@@ -1,11 +1,13 @@
 #ifndef GAMEENGINE_HH_
 # define GAMEENGINE_HH_
 
-//#include <stdio.h>
 #include <iostream>
 #include <vector>
 
-#include "SDL.h"
+#include <SDL.h>
+
+#define WIDTH	800
+#define HEIGHT	600
 
 // Forward declaration
 class CGameState;
@@ -15,8 +17,8 @@ class CGameEngine
 public:
 
     void Init(const char	*title,
-	      int	width=800,
-	      int	height=600,
+	      int	width=WIDTH,
+	      int	height=HEIGHT,
 	      int	bpp=0,
 	      bool	fullscreen=false);
     void Cleanup();

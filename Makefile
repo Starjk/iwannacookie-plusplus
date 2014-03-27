@@ -1,6 +1,6 @@
 PROGRAM = shoot
 
-SOURCE = firstpstate.cc gameengine.cc menustate.cc pausestate.cc root.cc
+SOURCE = firstpstate.cc gameengine.cc menustate.cc pausestate.cc physengine.cc player.cc root.cc
 OBJECT = $(SOURCE:.cc=.o)
 
 GXX = g++
