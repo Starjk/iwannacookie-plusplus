@@ -23,12 +23,16 @@ void Player::Init()
     ship_rect.w = 39;
     ship_rect.h = 52;
 
+    frequency = 100;
+
     std::cout << "Player Init" << std::endl;
 }
 
 void Player::Cleanup()
 {
     SDL_FreeSurface(spaceship);
+    for (unsigned i = 0, size = firepower.size(); i < size; i++)
+	firepower[i]->Cleanup();
 
     std::cout << "Player Cleanup" << std::endl;
 }
@@ -55,10 +59,21 @@ void Player::MoveRight()
     ship_rect.x += speed * 2;
 }
 
-void Player::MainWeapon()
+void Player::NewShot()
 {
-    std::cout << "Player Shoot: Pew Pew Pew"
-	      << std::endl;
+    frequency -= 5;
+    if (frequency <= 0)
+    {
+
+	Weaponery	*shot = new Weaponery(1, 50, 5);
+	shot->Init(ship_rect);
+	shot->SetMotion();
+	firepower.push_back(shot);
+
+	std::cout << "Player Shoot: Shot!" << std::endl;
+
+	frequency = 100;
+    }
 }
 
 void Player::HandleEvents()
@@ -67,11 +82,22 @@ void Player::HandleEvents()
 
 void Player::Update()
 {
+
+    for (unsigned i = 0, size = firepower.size(); i < size; i++)
+    {
+	if (!firepower[i]->GetMotion())
+	    firepower.erase(firepower.begin() + i);
+	firepower[i]->Update();
+	firepower[i]->HandlePhysics();
+    }
+
+    frequency--;
 }
 
 void Player::Draw(CGameEngine	*game)
 {
     SDL_BlitSurface(spaceship, NULL, game->screen, &ship_rect);
-    //SDL_UpdateRect(game->screen, 0, 0, 0, 0);
-}
 
+    for (unsigned i = 0, size = firepower.size(); i < size; i++)
+	firepower[i]->Draw(game);
+}

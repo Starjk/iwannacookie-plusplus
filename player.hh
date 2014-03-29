@@ -2,8 +2,10 @@
 # define PLAYER_HH_
 
 #include <SDL.h>
+#include <vector>
 
 #include "physengine.hh"
+#include "weapon.hh"
 
 class Player
 {
@@ -25,7 +27,11 @@ public:
     void MoveLeft();
     void MoveRight();
 
-    void MainWeapon();
+    // FIXME: should be NewShot() and act according to name
+    void MainWeapon(/* Weaponery player_weapon */);
+    void NewShot(/* Weaponery player_weapon */);
+    void UpgradeWeapon(/* Weaponery player_weapon */);
+    void DownWeapon(/* Weaponery player_weapon */);
 
     void HandleEvents();
     void Update();
@@ -38,6 +44,11 @@ private:
     int		life;
     int		speed;	// lateral move are * 2/3
     bool	has_spawn;
+
+    // FIXME: use list container to keep all visible shoot
+    std::vector<Weaponery*>	firepower;
+    Weaponery	pewpewpew;
+    int		frequency;
 };
 
 #endif /* PLAYER_HH_ */

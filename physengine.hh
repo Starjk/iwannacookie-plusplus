@@ -10,7 +10,6 @@ class PhysicEngine
 public:
 
     // Movement
-
     bool ShiftUp(SDL_Rect	*object);
     bool ShiftDown(SDL_Rect	*object);
     bool ShiftLeft(SDL_Rect	*object);
@@ -23,6 +22,16 @@ public:
     bool Collide(SDL_Rect	*object,
 		 SDL_Rect	*target);
 
+    static PhysicEngine	*Instance()
+    {
+	return &PhyEngine;
+    }
+
+protected:
+    PhysicEngine() { }
+
+private:
+    static PhysicEngine	PhyEngine;
 };
 
 #endif /* PHYSENGINE_HH_ */

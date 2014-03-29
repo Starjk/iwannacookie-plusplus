@@ -1,2 +1,2 @@
 error: ‘IMG_Load’ was not declared in this scope
-       Was refering to SDL_Image not included and not linked
+       Was refering to SDL_image (not 'I'mage) not included and not linked

@@ -19,6 +19,9 @@ public:
     void Update(CGameEngine	*game);
     void Draw(CGameEngine	*game);
 
+    // TODO: add this properly
+    void ScrollBackground();
+
     // Singleton B
     static CFirstPState	*Instance()
     {
@@ -35,6 +38,9 @@ private:
     SDL_Surface		*background;
     SDL_Rect		bg_focus;
     Player		player;
+
+    int			cycle;
+    int			clockwork;
 };
 
 #endif /* FIRSTPSTATE_HH_ */

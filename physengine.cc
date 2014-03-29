@@ -1,6 +1,6 @@
 #include "physengine.hh"
 
-// I have the define! Technically...
+PhysicEngine PhysicEngine::PhyEngine;
 
 bool	PhysicEngine::ShiftUp(SDL_Rect		*object)
 {

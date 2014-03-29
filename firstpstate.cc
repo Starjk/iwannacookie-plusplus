@@ -25,6 +25,9 @@ void CFirstPState::Init()
     bg_focus.w = WIDTH;
     bg_focus.h = HEIGHT;
 
+    cycle = 100;
+    clockwork = 5;
+
     player.Init();
 }
 
@@ -84,7 +87,8 @@ void CFirstPState::HandleEvents(CGameEngine	*game)
 	if (keys[SDLK_RIGHT])
 	    player.MoveRight();
 	if (keys[SDLK_SPACE])
-	    player.MainWeapon();
+//	    player.MainWeapon();
+	    player.NewShot();
 
     }
 }
@@ -93,6 +97,8 @@ void CFirstPState::Update(CGameEngine	*game)
 {
     // FIXME: compile flags
     game = game;
+
+    ScrollBackground();
     player.Update();
 }
 
@@ -104,3 +110,15 @@ void CFirstPState::Draw(CGameEngine	*game)
     SDL_UpdateRect(game->screen, 0, 0, 0, 0);
 }
 
+void CFirstPState::ScrollBackground()
+{
+    cycle -= clockwork;
+    if (cycle <= 0)
+    {
+	if (bg_focus.y <= 0)
+	    bg_focus.y = 4400;
+	else
+	    bg_focus.y -= 1;
+	cycle = 100;
+    }
+}
