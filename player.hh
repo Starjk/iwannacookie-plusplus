@@ -4,10 +4,14 @@
 #include <SDL.h>
 #include <vector>
 
+#include "ship.hh"
 #include "physengine.hh"
 #include "weapon.hh"
+#include "foe.hh"
 
-class Player
+class Foe;
+
+class Player : public Ship
 {
 public:
     Player()
@@ -22,33 +26,50 @@ public:
     void Init();
     void Cleanup();
 
+    void HandleEvents();
+    void Update();
+    void Draw(CGameEngine	*game);
+
     void MoveUp();
     void MoveDown();
     void MoveLeft();
     void MoveRight();
 
-    // FIXME: should be NewShot() and act according to name
-    void MainWeapon(/* Weaponery player_weapon */);
-    void NewShot(/* Weaponery player_weapon */);
+    void NewShot();
     void UpgradeWeapon(/* Weaponery player_weapon */);
     void DownWeapon(/* Weaponery player_weapon */);
 
-    void HandleEvents();
-    void Update();
-    void Draw(CGameEngine	*game);
+    void TakesDamages(int	value);
+
+    void HandleCollisions(Ship	*ship);
+    void HandleShooting(std::vector<Foe*> foes);
+
+    // GettersxSetters
+    void setPower(int fire_power) { firetype = fire_power; }
+    int getPower() const { return firetype; }
 
 private:
-    SDL_Surface	*spaceship;
-    SDL_Rect	ship_rect;
+
+    /**
+    SDL_Surface		*spaceship;
+    SDL_Rect		ship_rect;
+
+    // player fundamental stats
     int		health;
     int		life;
-    int		speed;	// lateral move are * 2/3
+    int		speed;	// lateral move are 3 times speed
+    int		firetype;
+    */
+
+    // not handled yet
     bool	has_spawn;
 
-    // FIXME: use list container to keep all visible shoot
+    /**
+    // aim to keep all visible shoot on screen
     std::vector<Weaponery*>	firepower;
-    Weaponery	pewpewpew;
+    // manage spacing between shots
     int		frequency;
+    */
 };
 
 #endif /* PLAYER_HH_ */

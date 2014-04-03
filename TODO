@@ -1,3 +1,18 @@
-Comment code moar! 
+Comment code moar! Moar comment every-fucking-where, ffs!
 Save or store surface loading somewhere in gameengine or graphicengine for better usage of memory
     (ie. valgrind check: 44M allocated when shooting type 1 weapon)
+Prio on Enemy creation and "interaction"
+
+List all current FIXME.
+
+firstpstate.cc:170:    // FIXME: implemented HandleCollisions for class Ship
+firstpstate.hh:31:    // FIXME: del/rename/call-in-the-right-way after TEST
+foe.cc:14:    foe_type = 1;	// FIXME: include moar enemy types
+foe.cc:15:    point = 100;	// FIXME: include moar enemy types
+foe.cc:42:// FIXME: physic engine not implemented/able?
+foe.cc:125:    // FIXME: still coding
+foe.hh:21:	    foe_type = 1;	// FIXME: include moar enemy types
+foe.hh:22:	    point = 100;	// FIXME: include moar enemy types
+player.cc:40:// FIXME: physic engine not implemented/able?
+player.cc:120:    // FIXME: still coding
+weapon.cc:11:    // FIXME: add switch for firetype and give out appropriate values

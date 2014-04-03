@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+
 #include "gameengine.hh"
 #include "gamestate.hh"
 #include "firstpstate.hh"
@@ -25,10 +26,12 @@ void CFirstPState::Init()
     bg_focus.w = WIDTH;
     bg_focus.h = HEIGHT;
 
-    cycle = 100;
+    cycle = BACKGROUND_SCROLL;
     clockwork = 5;
 
     player.Init();
+
+    score = 0;
 }
 
 void CFirstPState::Cleanup()
@@ -87,9 +90,42 @@ void CFirstPState::HandleEvents(CGameEngine	*game)
 	if (keys[SDLK_RIGHT])
 	    player.MoveRight();
 	if (keys[SDLK_SPACE])
-//	    player.MainWeapon();
 	    player.NewShot();
+	if (keys[SDLK_g])
+	    NewChallenger();
 
+    }
+
+    HandleCollisions();
+}
+
+void CFirstPState::NewChallenger()
+{
+
+    if (encounters.empty())
+	mob_control = MOB_CONTROL;
+
+    Foe	*foe = new Foe(25, 2);
+    foe->Init();
+    encounters.push_back(foe);
+}
+
+void CFirstPState::MobControl()
+{
+    mob_control -= clockwork;
+    if (mob_control <= 1)
+    {
+	for (unsigned i = 0, size = encounters.size();
+	     i < size; i++)
+	    if (encounters[i]->KeepAlive())
+		encounters[i]->Update();
+	    else
+	    {
+		score += encounters[i]->getPoint();
+		// encounters[i]->Cleanup();
+		encounters.erase(encounters.begin() + i);
+	    }
+	mob_control = MOB_CONTROL;
     }
 }
 
@@ -100,13 +136,18 @@ void CFirstPState::Update(CGameEngine	*game)
 
     ScrollBackground();
     player.Update();
+    MobControl();
 }
 
 void CFirstPState::Draw(CGameEngine	*game)
 {
-    // FIXME: add increment/+loop in bg_focus/background
     SDL_BlitSurface(background, &bg_focus, game->screen, NULL);
     player.Draw(game);
+
+    for (unsigned i = 0, size = encounters.size(); i < size; i++)
+	encounters[i]->Draw(game);
+
+    // Always last function
     SDL_UpdateRect(game->screen, 0, 0, 0, 0);
 }
 
@@ -119,6 +160,20 @@ void CFirstPState::ScrollBackground()
 	    bg_focus.y = 4400;
 	else
 	    bg_focus.y -= 1;
-	cycle = 100;
+	cycle = BACKGROUND_SCROLL;
     }
+}
+
+// if C, shot gets destroyed, target loses HP; targets manage own HP
+void	CFirstPState::HandleCollisions()
+{
+    // FIXME: implemented HandleCollisions for class Ship
+    for (unsigned i = 0, size = encounters.size(); i < size; i++)
+	encounters[i]->HandleCollisions(&player);
+	// HandleCollisions: does any of my shots touch target rect?
+	// if so, call Player->TakesDamages(value);
+
+    player.HandleShooting(encounters);
+    // for every foes, does any of my shots touch foe rect?
+    // if so, call Foe/Boss->TakesDamages(value);
 }

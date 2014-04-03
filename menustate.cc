@@ -86,7 +86,7 @@ void CMenuState::HandleEvents(CGameEngine	*game)
 
 void CMenuState::Update(CGameEngine		*game)
 {
-    // FIXME: compile
+    // FIXME: compile flags
     game = game;
 
     alpha--;

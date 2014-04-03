@@ -5,6 +5,8 @@
 #include "SDL.h"
 #include "gamestate.hh"
 
+#define	OPACITY	155
+
 class CPauseState : public CGameState
 {
 public:

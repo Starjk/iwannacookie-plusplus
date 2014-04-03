@@ -5,15 +5,14 @@
 
 #include "gameengine.hh"	// correspondence of WIDTH and HEIGHT
 
-class PhysicEngine
+namespace PhysicEngine
 {
-public:
 
     // Movement
-    bool ShiftUp(SDL_Rect	*object);
-    bool ShiftDown(SDL_Rect	*object);
-    bool ShiftLeft(SDL_Rect	*object);
-    bool ShiftRight(SDL_Rect	*object);
+    bool ShiftUp(SDL_Rect	&object);
+    bool ShiftDown(SDL_Rect	&object);
+    bool ShiftLeft(SDL_Rect	&object);
+    bool ShiftRight(SDL_Rect	&object);
 
     // Collision
 
@@ -22,16 +21,6 @@ public:
     bool Collide(SDL_Rect	*object,
 		 SDL_Rect	*target);
 
-    static PhysicEngine	*Instance()
-    {
-	return &PhyEngine;
-    }
-
-protected:
-    PhysicEngine() { }
-
-private:
-    static PhysicEngine	PhyEngine;
-};
+} /* PhysicEngine */
 
 #endif /* PHYSENGINE_HH_ */

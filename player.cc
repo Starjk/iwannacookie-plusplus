@@ -37,11 +37,12 @@ void Player::Cleanup()
     std::cout << "Player Cleanup" << std::endl;
 }
 
+// FIXME: physic engine not implemented/able?
+//     => ShiftUp(class Ship);
+
 void Player::MoveUp()
 {
     ship_rect.y -= speed;
-    // FIXME: physic engine not implemented/able?
-    // FIXME: ShiftUp(&ship_rect);
 }
 
 void Player::MoveDown()
@@ -51,12 +52,12 @@ void Player::MoveDown()
 
 void Player::MoveLeft()
 {
-    ship_rect.x -= speed * 2;
+    ship_rect.x -= speed * 3;
 }
 
 void Player::MoveRight()
 {
-    ship_rect.x += speed * 2;
+    ship_rect.x += speed * 3;
 }
 
 void Player::NewShot()
@@ -65,7 +66,7 @@ void Player::NewShot()
     if (frequency <= 0)
     {
 
-	Weaponery	*shot = new Weaponery(1, 50, 5);
+	Weaponery	*shot = new Weaponery(firetype, 50, 5);
 	shot->Init(ship_rect);
 	shot->SetMotion();
 	firepower.push_back(shot);
@@ -78,6 +79,8 @@ void Player::NewShot()
 
 void Player::HandleEvents()
 {
+    if (health <= 0)
+	std::cout << "Boom. Out." << std::endl;
 }
 
 void Player::Update()
@@ -86,7 +89,10 @@ void Player::Update()
     for (unsigned i = 0, size = firepower.size(); i < size; i++)
     {
 	if (!firepower[i]->GetMotion())
+	{
+	    // firepower[i]->Cleanup();
 	    firepower.erase(firepower.begin() + i);
+	}
 	firepower[i]->Update();
 	firepower[i]->HandlePhysics();
     }
@@ -100,4 +106,31 @@ void Player::Draw(CGameEngine	*game)
 
     for (unsigned i = 0, size = firepower.size(); i < size; i++)
 	firepower[i]->Draw(game);
+}
+
+void Player::TakesDamages(int	value)
+{
+    health -= value;
+    if (health <= 0)
+	std::cout << "Argh! I'm Dead!" << std::endl;
+}
+
+void Player::HandleCollisions(Ship	*ship)
+{
+    // FIXME: still coding
+    ship = ship;
+}
+
+void Player::HandleShooting(std::vector<Foe*>	foes)
+{
+    // for all player's shot, check all enemies for C
+    for (unsigned i = 0, pshots = firepower.size(); i < pshots; i++)
+	for (unsigned j = 0, size = foes.size(); j < size; j++)
+	    if (PhysicEngine::Collide(firepower[i]->getRect(),
+				      foes[j]->getRect()))
+	    {
+		foes[j]->TakesDamages(firepower[i]->getDamages());
+		firepower[i]->EndMotion();
+	    }
+
 }

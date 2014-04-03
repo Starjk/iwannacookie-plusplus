@@ -8,9 +8,11 @@ Weaponery::Weaponery(int	type,
 		     int	dmg,
 		     int	velocity)
 {
+    // FIXME: add switch for firetype and give out appropriate values
     firetype = type;
     damages = dmg;
     speed = velocity;
+
     motion = false;
     is_enemys = false;
 }

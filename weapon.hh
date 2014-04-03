@@ -30,6 +30,12 @@ public:
     void Update();
     void Draw(CGameEngine	*game);
 
+    // GettersxSetters
+    void setDamages(int		value) { damages = value; }
+    int	getDamages() const { return damages; }
+
+    SDL_Rect	*getRect() { return &fire_rect; }
+
 private:
     SDL_Surface	*shoot;
     SDL_Rect	fire_rect;

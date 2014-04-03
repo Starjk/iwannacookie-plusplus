@@ -1,7 +1,9 @@
 
 #include <iostream>
 
-#include "SDL.h"
+#include <SDL.h>
+#include <SDL_image.h>
+
 #include "gameengine.hh"
 #include "gamestate.hh"
 #include "pausestate.hh"
@@ -10,11 +12,32 @@ CPauseState CPauseState::m_PauseState;
 
 void CPauseState::Init()
 {
-    SDL_Surface *temp = SDL_LoadBMP("media/img/pause.bmp");
-
+    SDL_Surface *temp = IMG_Load("media/img/noir.jpg");
     background = SDL_DisplayFormat(temp);
-
     SDL_FreeSurface(temp);
+
+//     Uint32 rmask, gmask, bmask, amask;
+// #if SDL_BYTEORDER == SDL_BIG_ENDIAN
+//     rmask = 0xff000000;
+//     gmask = 0x00ff0000;
+//     bmask = 0x0000ff00;
+//     amask = 0x000000ff;
+// #else
+//     rmask = 0x000000ff;
+//     gmask = 0x0000ff00;
+//     bmask = 0x00ff0000;
+//     amask = 0x00000000;
+// #endif
+
+//     create the background surface like the background with alpha
+//     background = SDL_CreateRGBSurface(
+//    SDL_SRCALPHA, WIDTH, HEIGHT, 32, rmask, gmask, bmask, amask);
+
+    // fill the background surface with black
+//     SDL_FillRect (background, NULL, SDL_MapRGB (background->format,
+//    0, 0, 0));
+
+//     SDL_SetAlpha(background, SDL_SRCALPHA, OPACITY);
 
     std::cout << "CPauseState Init" << std::endl;
 }

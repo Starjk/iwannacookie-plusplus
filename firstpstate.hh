@@ -3,8 +3,14 @@
 # define FIRSTPSTATE_HH_
 
 #include <SDL.h>
+#include <vector>
+
 #include "gamestate.hh"
 #include "player.hh"
+#include "foe.hh"
+
+#define	BACKGROUND_SCROLL	100	// cycle
+#define	MOB_CONTROL		350	// mob_control
 
 class CFirstPState : public CGameState
 {
@@ -22,6 +28,14 @@ public:
     // TODO: add this properly
     void ScrollBackground();
 
+    // FIXME: del/rename/call-in-the-right-way after TEST
+    void NewChallenger();
+    void MobControl();
+
+    // for all enemies, check all shots for C w/ player, also
+    // for all player's shot, check all enemies for C
+    void HandleCollisions();
+
     // Singleton B
     static CFirstPState	*Instance()
     {
@@ -38,8 +52,12 @@ private:
     SDL_Surface		*background;
     SDL_Rect		bg_focus;
     Player		player;
+    unsigned		score;
 
-    int			cycle;
+    std::vector<Foe*>	encounters;
+
+    int			cycle;		// background freq
+    int			mob_control;	// foe freq
     int			clockwork;
 };
 

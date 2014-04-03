@@ -1,63 +1,67 @@
 #include "physengine.hh"
 
-PhysicEngine PhysicEngine::PhyEngine;
+// Movement management
 
-bool	PhysicEngine::ShiftUp(SDL_Rect		*object)
+bool	PhysicEngine::ShiftUp(SDL_Rect		&object)
 {
     object = object;
     return true;
 }
 
-bool	PhysicEngine::ShiftDown(SDL_Rect	*object)
+bool	PhysicEngine::ShiftDown(SDL_Rect	&object)
 {
     object = object;
     return true;
 }
 
-bool	PhysicEngine::ShiftLeft(SDL_Rect	*object)
+bool	PhysicEngine::ShiftLeft(SDL_Rect	&object)
 {
     object = object;
     return true;
 }
 
-bool	PhysicEngine::ShiftRight(SDL_Rect	*object)
+bool	PhysicEngine::ShiftRight(SDL_Rect	&object)
 {
     object = object;
     return true;
 }
+
+// Collision management
 
 static bool	CollideTop(SDL_Rect	*object,
 			   SDL_Rect	*target)
 {
-    // This one looks wrong
-    return ((target->y <= (object->y+object->h)) &&
-	    (object->x >= (target->x+target->w)) &&
-	    (object->x <= (target->x+target->w)));
+    return ((object->y + object->h >= target->y) &&
+	    (object->y < target->y) &&
+	    (object->x < target->x + target->w) &&	// <= ?
+	    (object->x + object->w > target->x));	// >= ?
 }
 
 static bool	CollideBottom(SDL_Rect	*object,
 			      SDL_Rect	*target)
 {
-    // This one too
-    return ((object->y >= (target->y+target->h)) &&
-	    (object->x >= (target->x+target->w)) &&
-	    (object->x <= (target->x+target->w)));
+    return ((target->y + target->h >= object->y) &&
+	    (target->y < object->y) &&
+	    (object->x < target->x + target->w) &&	// <= ?
+	    (object->x + object->w > target->x));	// >= ?
 }
 
 static bool	CollideLeft(SDL_Rect	*object,
 			    SDL_Rect	*target)
 {
-    return ((target->x <= (object->x+object->w)) &&
-	    (target->y <= (object->y+object->h)) &&
-	    (object->y <= (target->y+target->h)));
+    return ((target->x + target->w >= object->x) &&
+	    (target->x < object->x) &&
+	    (object->y < target->y + target->h) &&	// <= ?
+	    (object->y + object->h > target->y));	// >= ?
 }
 
 static bool	CollideRight(SDL_Rect	*object,
 			     SDL_Rect	*target)
 {
-    return ((object->x <= (target->x+target->w)) &&
-	    (target->y <= (object->y+object->h)) &&
-	    (object->y <= (target->y+target->h)));
+    return ((object->x + object->w >= target->x) &&
+	    (object->x < target->x) &&
+	    (object->y < target->y + target->h) &&	// <= ?
+	    (object->y + object->h > target->y));	// >= ?
 }
 
 bool	PhysicEngine::Collide(SDL_Rect	*object,
