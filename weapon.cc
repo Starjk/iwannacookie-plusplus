@@ -1,12 +1,14 @@
 #include <iostream>
 #include <SDL.h>
+#include <SDL_image.h>
 
 #include "gameengine.hh"
 #include "weapon.hh"
 
 Weaponery::Weaponery(int	type,
 		     int	dmg,
-		     int	velocity)
+		     int	velocity,
+		     bool	is_foe)
 {
     // FIXME: add switch for firetype and give out appropriate values
     firetype = type;
@@ -14,17 +16,24 @@ Weaponery::Weaponery(int	type,
     speed = velocity;
 
     motion = false;
-    is_enemys = false;
+    is_enemys = is_foe;
 }
 
 void Weaponery::Init(SDL_Rect	ship_rect)
 {
-    shoot = SDL_LoadBMP("media/img/fire_blue.bmp");
+    if (is_enemys)
+	shoot = IMG_Load("media/img/fire_red.png");
+    else
+	shoot = SDL_LoadBMP("media/img/fire_blue.bmp");
 
     fire_rect.w = 8;
     fire_rect.h = 18;
     fire_rect.x = ship_rect.x + (ship_rect.w/2) - (fire_rect.w/2);
-    fire_rect.y = ship_rect.y;
+
+    if (is_enemys)
+	fire_rect.y = ship_rect.y + ship_rect.h;
+    else
+	fire_rect.y = ship_rect.y;
 
     cycle = 100;
     clockwork = 5;

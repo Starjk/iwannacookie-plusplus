@@ -22,11 +22,10 @@ public:
     virtual void MoveLeft() = 0;
     virtual void MoveRight() = 0;
 
-    virtual void NewShot() = 0;
     virtual void TakesDamages(int	value) = 0;
 
     virtual void HandleCollisions(Ship	*ship) = 0;
-    bool KeepAlive() { return (health > 0); }
+    virtual bool KeepAlive() { return (health > 0); }
 
     // GettersxSetters
     virtual void setPower(int fire_power) = 0;
@@ -40,12 +39,9 @@ protected:
 
     // ship fundamental stats
     int		health;
-    int		life;	// player specific
     int		speed;	// lateral move are 3 times speed
     int		firetype;	// could be player specific
 
-    // aim to keep all visible shoot on screen
-    std::vector<Weaponery*>	firepower;
     // manage spacing between shots
     int		frequency;
 };

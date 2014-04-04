@@ -12,7 +12,6 @@ Player::Player(int	hp,
     health = hp;
     life = remaining_life;
     speed = actual_speed;
-    has_spawn = true;
 }
 
 void Player::Init()
@@ -37,9 +36,6 @@ void Player::Cleanup()
     std::cout << "Player Cleanup" << std::endl;
 }
 
-// FIXME: physic engine not implemented/able?
-//     => ShiftUp(class Ship);
-
 void Player::MoveUp()
 {
     ship_rect.y -= speed;
@@ -60,13 +56,14 @@ void Player::MoveRight()
     ship_rect.x += speed * 3;
 }
 
-void Player::NewShot()
+void Player::NewShot(bool	is_foe)
 {
+    // spacing out the shots
     frequency -= 5;
     if (frequency <= 0)
     {
 
-	Weaponery	*shot = new Weaponery(firetype, 50, 5);
+	Weaponery *shot = new Weaponery(firetype, 50, 5, is_foe);
 	shot->Init(ship_rect);
 	shot->SetMotion();
 	firepower.push_back(shot);
@@ -88,13 +85,11 @@ void Player::Update()
 
     for (unsigned i = 0, size = firepower.size(); i < size; i++)
     {
-	if (!firepower[i]->GetMotion())
+	if (firepower[i]->GetMotion())
 	{
-	    // firepower[i]->Cleanup();
-	    firepower.erase(firepower.begin() + i);
+	    firepower[i]->Update();
+	    firepower[i]->HandlePhysics();
 	}
-	firepower[i]->Update();
-	firepower[i]->HandlePhysics();
     }
 
     frequency--;
@@ -102,10 +97,12 @@ void Player::Update()
 
 void Player::Draw(CGameEngine	*game)
 {
-    SDL_BlitSurface(spaceship, NULL, game->screen, &ship_rect);
+    if (KeepAlive())
+	SDL_BlitSurface(spaceship, NULL, game->screen, &ship_rect);
 
     for (unsigned i = 0, size = firepower.size(); i < size; i++)
-	firepower[i]->Draw(game);
+	if (firepower[i]->GetMotion())
+	    firepower[i]->Draw(game);
 }
 
 void Player::TakesDamages(int	value)
@@ -133,4 +130,5 @@ void Player::HandleShooting(std::vector<Foe*>	foes)
 		firepower[i]->EndMotion();
 	    }
 
+    // FIXME: redo vector after a pass to REALLY cleanup the mess
 }

@@ -9,7 +9,9 @@
 #include "weapon.hh"
 #include "player.hh"
 
-#define	SHOT_SPEED	300
+#define	SHOT_FREQ	75
+#define	SHOT_SPEED	125
+#define SHOT_DISTANCE	250
 
 class Foe : public Ship
 {
@@ -20,6 +22,7 @@ public:
 	    speed = 2;
 	    foe_type = 1;	// FIXME: include moar enemy types
 	    point = 100;	// FIXME: include moar enemy types
+	    active = false;
 	}
     Foe(int	hp, int actual_speed);
 
@@ -35,9 +38,13 @@ public:
     void MoveLeft();
     void MoveRight();
 
-    void NewShot();
+    // Manage movement
+    void ActiveUnit(/* Ship *ship */);
+    // Manage shots nearing Player
+    void Aggression(Ship *ship, std::vector<Weaponery*> *shots);
     void TakesDamages(int	value);
     void HandleCollisions(Ship	*ship);
+    // bool KeepAlive();
 
     // GettersxSetters
     void setPower(int fire_power) { firetype = fire_power; }
@@ -47,6 +54,7 @@ public:
 private:
     int		point;
     int		foe_type;
+    bool	active;
     // int		foe_freq;
     // spaceship, ship_rect, health, speed, firetype, firepower, frequency
 };

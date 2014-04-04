@@ -41,6 +41,7 @@ void CFirstPState::Cleanup()
     std::cout << "CFirstPState Cleanup" << std::endl;
 
     player.Cleanup();
+    // FIXME: when called, massive SEGFAULT & should free more stuff
 }
 
 void CFirstPState::Pause()
@@ -97,6 +98,8 @@ void CFirstPState::HandleEvents(CGameEngine	*game)
     }
 
     HandleCollisions();
+    // if (!player.KeepAlive())
+    // 	game->PopState();
 }
 
 void CFirstPState::NewChallenger()
@@ -118,15 +121,40 @@ void CFirstPState::MobControl()
 	for (unsigned i = 0, size = encounters.size();
 	     i < size; i++)
 	    if (encounters[i]->KeepAlive())
+	    {
+		encounters[i]->ActiveUnit(/* &player */);
+		encounters[i]->Aggression(&player, &enc_shots);
 		encounters[i]->Update();
+	    }
 	    else
 	    {
 		score += encounters[i]->getPoint();
-		// encounters[i]->Cleanup();
-		encounters.erase(encounters.begin() + i);
+		encounters[i]->Cleanup();
+		encounters.clear();
 	    }
+	// FIXME: redo vector after a pass to REALLY cleanup the mess
 	mob_control = MOB_CONTROL;
     }
+}
+
+void CFirstPState::FireworksControl()
+{
+    for (unsigned i = 0, size = enc_shots.size(); i < size; i++)
+    {
+	if (enc_shots[i]->GetMotion())
+	{
+	    enc_shots[i]->Update();
+	    enc_shots[i]->HandlePhysics();
+	}
+
+	if (PhysicEngine::Collide(enc_shots[i]->getRect(),
+				  player.getRect()))
+	{
+	    player.TakesDamages(enc_shots[i]->getDamages());
+	    enc_shots[i]->EndMotion();
+	}
+    }
+    // FIXME: redo vector after a pass to REALLY cleanup the mess
 }
 
 void CFirstPState::Update(CGameEngine	*game)
@@ -137,15 +165,19 @@ void CFirstPState::Update(CGameEngine	*game)
     ScrollBackground();
     player.Update();
     MobControl();
+    FireworksControl();
 }
 
 void CFirstPState::Draw(CGameEngine	*game)
 {
     SDL_BlitSurface(background, &bg_focus, game->screen, NULL);
-    player.Draw(game);
 
+    player.Draw(game);
     for (unsigned i = 0, size = encounters.size(); i < size; i++)
 	encounters[i]->Draw(game);
+
+    for (unsigned i = 0, size = enc_shots.size(); i < size; i++)
+	enc_shots[i]->Draw(game);
 
     // Always last function
     SDL_UpdateRect(game->screen, 0, 0, 0, 0);
@@ -167,7 +199,6 @@ void CFirstPState::ScrollBackground()
 // if C, shot gets destroyed, target loses HP; targets manage own HP
 void	CFirstPState::HandleCollisions()
 {
-    // FIXME: implemented HandleCollisions for class Ship
     for (unsigned i = 0, size = encounters.size(); i < size; i++)
 	encounters[i]->HandleCollisions(&player);
 	// HandleCollisions: does any of my shots touch target rect?

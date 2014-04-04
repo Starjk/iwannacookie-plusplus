@@ -19,7 +19,6 @@ public:
 	    health = 100;
 	    life = 3;
 	    speed = 4;
-	    has_spawn = true;
 	}
     Player(int	hp, int	remaining_life, int actual_speed);
 
@@ -35,7 +34,7 @@ public:
     void MoveLeft();
     void MoveRight();
 
-    void NewShot();
+    void NewShot(bool		is_foe=false);
     void UpgradeWeapon(/* Weaponery player_weapon */);
     void DownWeapon(/* Weaponery player_weapon */);
 
@@ -50,23 +49,16 @@ public:
 
 private:
 
-    /**
-    SDL_Surface		*spaceship;
-    SDL_Rect		ship_rect;
-
     // player fundamental stats
-    int		health;
     int		life;
+    /**
     int		speed;	// lateral move are 3 times speed
     int		firetype;
     */
 
-    // not handled yet
-    bool	has_spawn;
-
-    /**
     // aim to keep all visible shoot on screen
     std::vector<Weaponery*>	firepower;
+    /**
     // manage spacing between shots
     int		frequency;
     */

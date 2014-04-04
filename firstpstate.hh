@@ -29,8 +29,12 @@ public:
     void ScrollBackground();
 
     // FIXME: del/rename/call-in-the-right-way after TEST
-    void NewChallenger();
+    // Every X loop, create Y new foes
+    void NewChallenger(/* int	n_foes */);
+    // Manage enemies lifecycle: mvt, shooting, point, update
     void MobControl();
+    // Manage vector of Weapon for enemies
+    void FireworksControl();
 
     // for all enemies, check all shots for C w/ player, also
     // for all player's shot, check all enemies for C
@@ -55,6 +59,8 @@ private:
     unsigned		score;
 
     std::vector<Foe*>	encounters;
+    // vector of shots for enemies or cleanup foes only when fire done
+    std::vector<Weaponery*>	enc_shots;
 
     int			cycle;		// background freq
     int			mob_control;	// foe freq

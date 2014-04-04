@@ -13,6 +13,7 @@ Foe::Foe(int	hp,
     speed = actual_speed;
     foe_type = 1;	// FIXME: include moar enemy types
     point = 100;	// FIXME: include moar enemy types
+    active = false;
 }
 
 void Foe::Init()
@@ -25,7 +26,7 @@ void Foe::Init()
     ship_rect.w = 45;
     ship_rect.h = 57;
 
-    frequency = SHOT_SPEED;
+    frequency = SHOT_FREQ;
 
     std::cout << "Foe Init" << std::endl;
 }
@@ -33,14 +34,9 @@ void Foe::Init()
 void Foe::Cleanup()
 {
     SDL_FreeSurface(spaceship);
-    for (unsigned i = 0, size = firepower.size(); i < size; i++)
-	firepower[i]->Cleanup();
 
     std::cout << "Foe Cleanup" << std::endl;
 }
-
-// FIXME: physic engine not implemented/able?
-//     => ShiftUp(class Ship);
 
 void Foe::MoveUp()
 {
@@ -62,20 +58,29 @@ void Foe::MoveRight()
     ship_rect.x += speed * 3;
 }
 
-void Foe::NewShot()
+void Foe::ActiveUnit(/* Ship *ship */)
 {
-    frequency -= 5;
-    if (frequency <= 0)
+    MoveRight();
+    MoveDown();
+}
+
+void Foe::Aggression(Ship *ship, std::vector<Weaponery*> *shots)
+{
+    if (abs(ship->getRect()->x - ship_rect.x) < SHOT_DISTANCE)
     {
+	// spacing out the shots
+	frequency -= 5;
+	if (frequency <= 0)
+	{
+	    Weaponery *shot = new Weaponery(firetype, 50, 5, true);
+	    shot->Init(ship_rect);
+	    shot->SetMotion();
+	    shots->push_back(shot);
 
-	Weaponery	*shot = new Weaponery(firetype, 50, 5);
-	shot->Init(ship_rect);
-	shot->SetMotion();
-	firepower.push_back(shot);
+	    std::cout << "Foe Shoot: Shot!" << std::endl;
 
-	std::cout << "Foe Shoot: Shot!" << std::endl;
-
-	frequency = SHOT_SPEED;
+	    frequency = SHOT_FREQ;
+	}
     }
 }
 
@@ -87,30 +92,13 @@ void Foe::HandleEvents()
 
 void Foe::Update()
 {
-
-    MoveRight();
-    MoveDown();
-
-    for (unsigned i = 0, size = firepower.size(); i < size; i++)
-    {
-	if (!firepower[i]->GetMotion())
-	{
-	    firepower[i]->Cleanup();
-	    firepower.erase(firepower.begin() + i);
-	}
-	firepower[i]->Update();
-	firepower[i]->HandlePhysics();
-    }
-
+    // why, though?!
     frequency--;
 }
 
 void Foe::Draw(CGameEngine	*game)
 {
     SDL_BlitSurface(spaceship, NULL, game->screen, &ship_rect);
-
-    for (unsigned i = 0, size = firepower.size(); i < size; i++)
-	firepower[i]->Draw(game);
 }
 
 void Foe::TakesDamages(int	value)

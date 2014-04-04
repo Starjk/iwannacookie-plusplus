@@ -1,18 +1,19 @@
-Comment code moar! Moar comment every-fucking-where, ffs!
+Priority on Enemy creation/summon and "interaction"
+Cleaning Vectors<*> AND interacte w/ content if valuable (motion/keepalive).
 Save or store surface loading somewhere in gameengine or graphicengine for better usage of memory
-    (ie. valgrind check: 44M allocated when shooting type 1 weapon)
-Prio on Enemy creation and "interaction"
+Create HUD (new class?), better manage score and health.
 
-List all current FIXME.
+List all current FIXME (grep -Rn FIXME *.[ch]* | grep -v "compile flags" | grep FIXME)
 
-firstpstate.cc:170:    // FIXME: implemented HandleCollisions for class Ship
+firstpstate.cc:44:    // FIXME: when called, massive SEGFAULT & should free more stuff
+firstpstate.cc:135:	// FIXME: redo vector after a pass to REALLY cleanup the mess
+firstpstate.cc:157:    // FIXME: redo vector after a pass to REALLY cleanup the mess
 firstpstate.hh:31:    // FIXME: del/rename/call-in-the-right-way after TEST
 foe.cc:14:    foe_type = 1;	// FIXME: include moar enemy types
 foe.cc:15:    point = 100;	// FIXME: include moar enemy types
-foe.cc:42:// FIXME: physic engine not implemented/able?
-foe.cc:125:    // FIXME: still coding
-foe.hh:21:	    foe_type = 1;	// FIXME: include moar enemy types
-foe.hh:22:	    point = 100;	// FIXME: include moar enemy types
-player.cc:40:// FIXME: physic engine not implemented/able?
-player.cc:120:    // FIXME: still coding
-weapon.cc:11:    // FIXME: add switch for firetype and give out appropriate values
+foe.cc:113:    // FIXME: still coding
+foe.hh:23:	    foe_type = 1;	// FIXME: include moar enemy types
+foe.hh:24:	    point = 100;	// FIXME: include moar enemy types
+player.cc:117:    // FIXME: still coding
+player.cc:133:    // FIXME: redo vector after a pass to REALLY cleanup the mess
+weapon.cc:13:    // FIXME: add switch for firetype and give out appropriate values

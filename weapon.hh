@@ -15,7 +15,7 @@ public:
 	    speed = 5;
 	    motion = false;
 	}
-    Weaponery(int type, int dmg, int speed);
+    Weaponery(int type, int dmg, int velocity, bool is_foe=false);
 
     void Init(SDL_Rect	ship_rect);
     void Cleanup();
