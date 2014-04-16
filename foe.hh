@@ -18,11 +18,19 @@ class Foe : public Ship
 public:
     Foe()
 	{
-	    health = 25;
+	    health = 55;
 	    speed = 2;
 	    foe_type = 1;	// FIXME: include moar enemy types
 	    point = 100;	// FIXME: include moar enemy types
-	    active = false;
+	    EndExistence();
+	}
+    Foe(int	type)
+	{
+	    health = 55;
+	    speed = 2;
+	    foe_type = type;	// FIXME: include moar enemy types
+	    point = 100;	// FIXME: include moar enemy types
+	    EndExistence();
 	}
     Foe(int	hp, int actual_speed);
 
@@ -41,7 +49,7 @@ public:
     // Manage movement
     void ActiveUnit(/* Ship *ship */);
     // Manage shots nearing Player
-    void Aggression(Ship *ship, std::vector<Weaponery*> *shots);
+    void Aggression(Ship *ship, std::vector<Weaponry*> *shots);
     void TakesDamages(int	value);
     void HandleCollisions(Ship	*ship);
     // bool KeepAlive();
@@ -49,12 +57,13 @@ public:
     // GettersxSetters
     void setPower(int fire_power) { firetype = fire_power; }
     int getPower() const { return firetype; }
+    void setPoint(int pt) { point = pt; }
     int getPoint() const { return point; }
 
 private:
     int		point;
     int		foe_type;
-    bool	active;
+
     // int		foe_freq;
     // spaceship, ship_rect, health, speed, firetype, firepower, frequency
 };

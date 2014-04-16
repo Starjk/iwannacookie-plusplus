@@ -19,10 +19,7 @@ public:
     void Draw(CGameEngine	*game);
 
     // Singleton B
-    static CMenuState* Instance()
-    {
-	return &m_MenuState;
-    }
+    static CMenuState* Instance() { return &m_MenuState; }
 
 protected:
     CMenuState() { }

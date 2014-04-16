@@ -12,6 +12,7 @@ Player::Player(int	hp,
     health = hp;
     life = remaining_life;
     speed = actual_speed;
+    EndExistence();
 }
 
 void Player::Init()
@@ -24,11 +25,13 @@ void Player::Init()
 
     frequency = 100;
 
+    StartExistence();
     std::cout << "Player Init" << std::endl;
 }
 
 void Player::Cleanup()
 {
+    // FIXME: if Doesnt Exists, cleanup
     SDL_FreeSurface(spaceship);
     for (unsigned i = 0, size = firepower.size(); i < size; i++)
 	firepower[i]->Cleanup();
@@ -63,9 +66,9 @@ void Player::NewShot(bool	is_foe)
     if (frequency <= 0)
     {
 
-	Weaponery *shot = new Weaponery(firetype, 50, 5, is_foe);
+	Weaponry *shot = new Weaponry(firetype, 50, 5, is_foe);
 	shot->Init(ship_rect);
-	shot->SetMotion();
+	shot->StartMotion();
 	firepower.push_back(shot);
 
 	std::cout << "Player Shoot: Shot!" << std::endl;
@@ -76,8 +79,22 @@ void Player::NewShot(bool	is_foe)
 
 void Player::HandleEvents()
 {
+    Uint8	*keys = SDL_GetKeyState(NULL);
+
+    if (keys[SDLK_UP])
+	MoveUp();
+    if (keys[SDLK_DOWN])
+	MoveDown();
+    if (keys[SDLK_LEFT])
+	MoveLeft();
+    if (keys[SDLK_RIGHT])
+	MoveRight();
+    if (keys[SDLK_SPACE])
+	NewShot();
+
     if (health <= 0)
 	std::cout << "Boom. Out." << std::endl;
+
 }
 
 void Player::Update()

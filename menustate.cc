@@ -6,7 +6,7 @@
 #include "gameengine.hh"
 #include "gamestate.hh"
 #include "menustate.hh"
-#include "firstpstate.hh"
+#include "firststate.hh"
 
 CMenuState CMenuState::m_MenuState;
 
@@ -68,7 +68,7 @@ void CMenuState::HandleEvents(CGameEngine	*game)
 	case SDL_KEYDOWN:
 	    switch (event.key.keysym.sym) {
 	    case SDLK_RETURN:
-		game->ChangeState(CFirstPState::Instance());
+		game->ChangeState(FirstState::Instance());
 		break;
 
 	    case SDLK_ESCAPE:

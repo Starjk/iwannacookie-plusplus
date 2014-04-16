@@ -5,30 +5,28 @@
 
 #include "physengine.hh"
 
-class Weaponery
+class Weaponry
 {
 public:
-    Weaponery()
+    Weaponry()
 	{
 	    firetype = 1;
 	    damages = 50;
 	    speed = 5;
 	    motion = false;
 	}
-    Weaponery(int type, int dmg, int velocity, bool is_foe=false);
+    Weaponry(int type, int dmg, int velocity, bool is_foe=false);
 
     void Init(SDL_Rect	ship_rect);
     void Cleanup();
 
-    /* ... */
-    void SetMotion();
-    bool GetMotion();
-    void EndMotion();
-    /* ... */
-
     void HandlePhysics();
     void Update();
     void Draw(CGameEngine	*game);
+
+    void StartMotion() { motion = true; }
+    void EndMotion() { motion = false; }
+    bool GetMotion() const { return motion; }
 
     // GettersxSetters
     void setDamages(int		value) { damages = value; }

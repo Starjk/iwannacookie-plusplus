@@ -13,7 +13,7 @@ Foe::Foe(int	hp,
     speed = actual_speed;
     foe_type = 1;	// FIXME: include moar enemy types
     point = 100;	// FIXME: include moar enemy types
-    active = false;
+    EndExistence();
 }
 
 void Foe::Init()
@@ -27,6 +27,7 @@ void Foe::Init()
     ship_rect.h = 57;
 
     frequency = SHOT_FREQ;
+    StartExistence();
 
     std::cout << "Foe Init" << std::endl;
 }
@@ -64,7 +65,7 @@ void Foe::ActiveUnit(/* Ship *ship */)
     MoveDown();
 }
 
-void Foe::Aggression(Ship *ship, std::vector<Weaponery*> *shots)
+void Foe::Aggression(Ship *ship, std::vector<Weaponry*> *shots)
 {
     if (abs(ship->getRect()->x - ship_rect.x) < SHOT_DISTANCE)
     {
@@ -72,9 +73,9 @@ void Foe::Aggression(Ship *ship, std::vector<Weaponery*> *shots)
 	frequency -= 5;
 	if (frequency <= 0)
 	{
-	    Weaponery *shot = new Weaponery(firetype, 50, 5, true);
+	    Weaponry *shot = new Weaponry(firetype, 50, 5, true);
 	    shot->Init(ship_rect);
-	    shot->SetMotion();
+	    shot->StartMotion();
 	    shots->push_back(shot);
 
 	    std::cout << "Foe Shoot: Shot!" << std::endl;
@@ -105,7 +106,7 @@ void Foe::TakesDamages(int	value)
 {
     health -= value;
     if (health <= 0)
-	std::cout << "Die, rebel scum." << std::endl;
+	EndExistence();
 }
 
 void Foe::HandleCollisions(Ship		*ship)

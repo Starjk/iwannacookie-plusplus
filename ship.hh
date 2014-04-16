@@ -2,7 +2,6 @@
 # define SHIP_HH_
 
 #include <SDL.h>
-#include <vector>
 
 #include "gameengine.hh"
 #include "weapon.hh"
@@ -25,7 +24,12 @@ public:
     virtual void TakesDamages(int	value) = 0;
 
     virtual void HandleCollisions(Ship	*ship) = 0;
+    // FIXME: bool KeepAlive() or IsLive() or Exists()
     virtual bool KeepAlive() { return (health > 0); }
+
+    virtual void StartExistence() { exists = true; }
+    virtual void EndExistence() { exists = false; }
+    virtual bool DoesExists() const { return exists; }
 
     // GettersxSetters
     virtual void setPower(int fire_power) = 0;
@@ -36,6 +40,7 @@ public:
 protected:
     SDL_Surface		*spaceship;
     SDL_Rect		ship_rect;
+    bool		exists;
 
     // ship fundamental stats
     int		health;

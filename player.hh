@@ -19,13 +19,14 @@ public:
 	    health = 100;
 	    life = 3;
 	    speed = 4;
+	    EndExistence();
 	}
     Player(int	hp, int	remaining_life, int actual_speed);
 
     void Init();
     void Cleanup();
 
-    void HandleEvents();
+    void HandleEvents();	// manage keyboard input for ship
     void Update();
     void Draw(CGameEngine	*game);
 
@@ -35,8 +36,8 @@ public:
     void MoveRight();
 
     void NewShot(bool		is_foe=false);
-    void UpgradeWeapon(/* Weaponery player_weapon */);
-    void DownWeapon(/* Weaponery player_weapon */);
+    void UpgradeWeapon(/* Weaponry player_weapon */);
+    void DownWeapon(/* Weaponry player_weapon */);
 
     void TakesDamages(int	value);
 
@@ -57,7 +58,7 @@ private:
     */
 
     // aim to keep all visible shoot on screen
-    std::vector<Weaponery*>	firepower;
+    std::vector<Weaponry*>	firepower;
     /**
     // manage spacing between shots
     int		frequency;

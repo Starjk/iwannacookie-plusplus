@@ -21,10 +21,7 @@ public:
     void Draw(CGameEngine	*game);
 
     // Singleton B
-    static CPauseState	*Instance()
-    {
-	return &m_PauseState;
-    }
+    static CPauseState	*Instance() { return &m_PauseState; }
 
 protected:
     CPauseState() { }

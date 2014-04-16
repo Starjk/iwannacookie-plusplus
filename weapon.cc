@@ -5,7 +5,7 @@
 #include "gameengine.hh"
 #include "weapon.hh"
 
-Weaponery::Weaponery(int	type,
+Weaponry::Weaponry(int	type,
 		     int	dmg,
 		     int	velocity,
 		     bool	is_foe)
@@ -19,7 +19,7 @@ Weaponery::Weaponery(int	type,
     is_enemys = is_foe;
 }
 
-void Weaponery::Init(SDL_Rect	ship_rect)
+void Weaponry::Init(SDL_Rect	ship_rect)
 {
     if (is_enemys)
 	shoot = IMG_Load("media/img/fire_red.png");
@@ -41,36 +41,21 @@ void Weaponery::Init(SDL_Rect	ship_rect)
     std::cout << "Shoot Init" << std::endl;
 }
 
-void Weaponery::Cleanup()
+void Weaponry::Cleanup()
 {
     SDL_FreeSurface(shoot);
 
     std::cout << "Shoot Cleanup" << std::endl;
 }
 
-void Weaponery::SetMotion()
-{
-    motion = true;
-}
-
-bool Weaponery::GetMotion()
-{
-    return motion;
-}
-
-void Weaponery::EndMotion()
-{
-    motion = false;
-}
-
-void Weaponery::HandlePhysics()
+void Weaponry::HandlePhysics()
 {
     if ((motion) &&
 	((fire_rect.y <= 0) || (fire_rect.y >= HEIGHT)))
 	EndMotion();
 }
 
-void Weaponery::Update()
+void Weaponry::Update()
 {
     cycle -= clockwork;
     if ((motion) && (cycle <= 0))
@@ -83,7 +68,7 @@ void Weaponery::Update()
     }
 }
 
-void Weaponery::Draw(CGameEngine	*game)
+void Weaponry::Draw(CGameEngine	*game)
 {
     if (motion)
 	SDL_BlitSurface(shoot, NULL, game->screen, &fire_rect);
