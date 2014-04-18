@@ -7,6 +7,7 @@
 #include "gameengine.hh"
 #include "gamestate.hh"
 #include "firststate.hh"
+#include "menustate.hh"
 #include "pausestate.hh"
 
 FirstState FirstState::m_FirstState;
@@ -41,9 +42,7 @@ void	FirstState::Cleanup()
 
     std::cout << "FirstState Cleanup" << std::endl;
 
-    // FIXME: if not cleanable, do something (player)
     player.Cleanup();
-    // FIXME: if not cleanable, do something (armada)
     armada.Cleanup();
     // FIXME: when called, massive SEGFAULT & should free more stuff
 }
@@ -90,8 +89,9 @@ void	FirstState::HandleEvents(CGameEngine	*game)
     if (cycle <= tick)
 	player.HandleEvents();
 
-    // if ((!player.KeepAlive() && (!player.DoesExists())) || GameOver())
-    // 	game->PopState();	FIXME: Bad Cleanup()?
+    if ((!player.KeepAlive() && (!player.DoesExists()))/* || GameOver()*/)
+	// TODO: must destroy the singleton otherwise, I leave menu to restart where I died
+    	game->PopState();
 }
 
 void	FirstState::Update(CGameEngine	*game)

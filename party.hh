@@ -16,7 +16,7 @@ class Party
 {
 public:
 
-    Party() { partysize = 2; hourglass = 100; }
+    Party() { partysize = 2; initsize = 2; hourglass = 100; }
 
     Party(int	preset);
     Party(int	inter, int	size);
@@ -32,7 +32,11 @@ public:
     void Update(Player		*player);
     void Draw(CGameEngine	*game);
 
-    // Check if Party can/should be Cleaned Up
+    // Remove elements if Cease to exists or HP <= 0
+    bool Sanitize();
+    int	GetNonExistent();
+    int	GetStationary();
+    // Help check if Party can/should be Cleaned Up
     bool NoMoreFoes();
     bool NoMoreShots();
 
@@ -41,16 +45,17 @@ public:
     // Manage vector of Weapon for enemies
     void FireworksControl(Player	*player);
 
+    // if partysize = 0 and NoMoreFoes(), party out (not defeated per se)
+    bool PartyOut();
+
     // GettersxSetters
     std::vector<Foe*> getParty() const
 	{ return party; }
     void setParty(std::vector<Foe*> newParty)
 	{ party = newParty; }
 
-    int getInterval() const
-	{ return interval; }
-    void setInterval(int inter)
-	{ interval = inter; }
+    int getInterval() const { return interval; }
+    void setInterval(int inter) { interval = inter; }
 
     std::vector<Weaponry*> getFireworks() const
 	{ return fireworks; }
@@ -62,6 +67,7 @@ private:
     int			partytype;
     int			partysize;
     int			hourglass;	// fixed value of interval
+    int			initsize;
     int			interval;	// decreasing value
     std::vector<Weaponry*>	fireworks;
 
@@ -75,11 +81,11 @@ class Party
 {
 public:
 
-    void HandleInterval(CGameEngine	*game); // FIXME: not sure
+    void HandleInterval(CGameEngine	*game); // FIXM.: not sure
     void Update(CGameEngine	*game); // up conditions of enemies/shots/overall-party
     void Draw(CGameEngine	*game); // draw all legits enemies/shots
 
-    // FIXME: dafuk?! from Party, get Party, for newRound?!
+    // FIXM.: dafuk?! from Party, get Party, for newRound?!
     //void NewRound(Party);
 
     bool Summon() { return (hourglass <= 0); }
@@ -90,7 +96,7 @@ public:
     void SummonBoss(int	bosstype, int health);
 
     void NewChallenger(); // push new Foe in party (?)
-    void MobControl(); // check KeepAlive, ActiveUnit, Aggression, Update, Cleanup? (and return point?)
+    void MobControl(); // check KeepAlive, Mobility, Aggression, Update, Cleanup? (and return point?)
     void FireworksControl(); // manage Enemies' weapon
 
 };

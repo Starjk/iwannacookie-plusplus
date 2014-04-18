@@ -68,7 +68,9 @@ void CMenuState::HandleEvents(CGameEngine	*game)
 	case SDL_KEYDOWN:
 	    switch (event.key.keysym.sym) {
 	    case SDLK_RETURN:
-		game->ChangeState(FirstState::Instance());
+		game->PushState(FirstState::Instance());
+		// FIXME: cannot start new game, because PushState start a new Init() and because Singleton(?)
+		// game->ChangeState(FirstState::Instance());
 		break;
 
 	    case SDLK_ESCAPE:

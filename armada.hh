@@ -21,18 +21,25 @@ public:
     Armada(int lvl, int inter); // level determines preset values
 
     void Init(int	lvl=1);
-    void Cleanup(); // check if clean up to do, return bool?
+    void Cleanup(); // check if clean up to do, then clear
 
     void HandleCollisions(Player *player); // manage c/ for each party
     // void HandleEvent(); ? Really?
     void Update(Player		*player);
     void Draw(CGameEngine	*game);
 
+    // Remove party if Defeated, no Cleanup 'cause maybe Boss/Party
+    bool Sanitize();
+    int	GetPartyOuted();
+
     // party quantity managment
 
     // preset managment
     void addPreset(int newPreset);
     int popPreset();
+
+    bool Defeated();	// if preset empty and all parties "out"
+    void CallBoss();	// all parties out
 
     // GettersxSetters
     std::vector<Party*> getArmada() const

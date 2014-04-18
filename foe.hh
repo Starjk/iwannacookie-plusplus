@@ -9,9 +9,9 @@
 #include "weapon.hh"
 #include "player.hh"
 
-#define	SHOT_FREQ	75
-#define	SHOT_SPEED	125
-#define SHOT_DISTANCE	250
+#define	FOE_SHOT_FREQ		75
+#define	FOE_SHOT_SPEED		125
+#define FOE_SHOT_DISTANCE	250
 
 class Foe : public Ship
 {
@@ -20,16 +20,16 @@ public:
 	{
 	    health = 55;
 	    speed = 2;
-	    foe_type = 1;	// FIXME: include moar enemy types
-	    point = 100;	// FIXME: include moar enemy types
+	    foe_type = 1;	// TODO: include moar enemy types
+	    point = 100;	// TODO: include moar enemy types
 	    EndExistence();
 	}
     Foe(int	type)
 	{
 	    health = 55;
 	    speed = 2;
-	    foe_type = type;	// FIXME: include moar enemy types
-	    point = 100;	// FIXME: include moar enemy types
+	    foe_type = type;	// TODO: include moar enemy types
+	    point = 100;	// TODO: include moar enemy types
 	    EndExistence();
 	}
     Foe(int	hp, int actual_speed);
@@ -41,18 +41,17 @@ public:
     void Update();
     void Draw(CGameEngine	*game);
 
-    void MoveUp();
-    void MoveDown();
-    void MoveLeft();
-    void MoveRight();
+    void MoveUp() { ship_rect.y -= speed; }
+    void MoveDown() { ship_rect.y += speed; }
+    void MoveLeft() { ship_rect.x -= speed * 3; }
+    void MoveRight() { ship_rect.x += speed * 3; }
 
     // Manage movement
-    void ActiveUnit(/* Ship *ship */);
+    void Mobility(/* Ship *ship */);
     // Manage shots nearing Player
     void Aggression(Ship *ship, std::vector<Weaponry*> *shots);
     void TakesDamages(int	value);
     void HandleCollisions(Ship	*ship);
-    // bool KeepAlive();
 
     // GettersxSetters
     void setPower(int fire_power) { firetype = fire_power; }

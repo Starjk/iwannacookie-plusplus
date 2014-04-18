@@ -1,32 +1,16 @@
-Priority on Enemy creation/summon and "interaction"
-Cleaning Vectors<*> AND interacte w/ content if valuable (motion/keepalive).
-	 Should clean while updating (first or last)? or Cleanup at every loop?
+Manage Enemy type and mobility value
 Save or store surface loading somewhere in gameengine or graphicengine for better usage of memory
 Create HUD (new class? namespace with game* seems better), better manage score and health.
+Manage Boss Creation and Interaction
 
 List all current FIXME (grep -Rn FIXME *.[ch]* | grep -v "compile flags" | grep FIXME)
 
-armada.cc:18:    //FIXME: NOW!
-armada.cc:36:    // FIXME: check working value
-armada.cc:55:    // FIXME: do something for end of enemy cycle
-firststate.cc:44:    // FIXME: if not cleanable, do something (player)
-firststate.cc:46:    // FIXME: if not cleanable, do something (armada)
-firststate.cc:48:    // FIXME: when called, massive SEGFAULT & should free more stuff
-firststate.cc:94:    // 	game->PopState();	FIXME: Bad Cleanup()?
-foe.cc:14:    foe_type = 1;	// FIXME: include moar enemy types
-foe.cc:15:    point = 100;	// FIXME: include moar enemy types
-foe.cc:114:    // FIXME: still coding
-foe.hh:23:	    foe_type = 1;	// FIXME: include moar enemy types
-foe.hh:24:	    point = 100;	// FIXME: include moar enemy types
-foe.hh:31:	    foe_type = type;	// FIXME: include moar enemy types
-foe.hh:32:	    point = 100;	// FIXME: include moar enemy types
-party.cc:38:    // FIXME: check working value
-party.cc:117:	// FIXME: redo vector after a pass to REALLY cleanup the mess
-party.cc:139:    // FIXME: redo vector after a pass to REALLY cleanup the mess
-party.hh:78:    void HandleInterval(CGameEngine	*game); // FIXME: not sure
-party.hh:82:    // FIXME: dafuk?! from Party, get Party, for newRound?!
-player.cc:34:    // FIXME: if Doesnt Exists, cleanup
-player.cc:134:    // FIXME: still coding
-player.cc:150:    // FIXME: redo vector after a pass to REALLY cleanup the mess
-ship.hh:27:    // FIXME: bool KeepAlive() or IsLive() or Exists()
+armada.cc:18:    //FIXME: time between party, but also time before first party :/
+firststate.cc:47:    // FIXME: when called, massive SEGFAULT & should free more stuff
+foe.cc:109:	// FIXME: check if rect x and y are negative or not
+foe.cc:122:    // FIXME: still coding
+menustate.cc:72:		// FIXME: cannot start new game, because PushState start a new Init() and because Singleton(?)
+player.cc:133:// FIXME: I am the same function as in class Party
+player.cc:203://     // FIXME: still coding
+player.cc:220:    // FIXME: clean firepower but not while looping on Vec firepower
 weapon.cc:13:    // FIXME: add switch for firetype and give out appropriate values

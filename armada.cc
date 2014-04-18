@@ -15,30 +15,24 @@ Armada::Armada(int	lvl, int	inter)
 void	Armada::Init(int	lvl)
 {
     level = lvl;
-    //FIXME: NOW!
-    hourglass = 1000;
+    //FIXME: time between party, but also time before first party :/
+    hourglass = 10000;
     interval = hourglass;
 
     if (level == 1)
     {
-	preset.push_back(115);
-	preset.push_back(115);
+	addPreset(123);
+	addPreset(224);
     }
     if (level == 2)
     {
-	preset.push_back(116);
-	preset.push_back(224);
+	addPreset(116);
+	addPreset(224);
     }
 }
 
 void	Armada::Cleanup()
 {
-    // FIXME: check working value
-    for (unsigned i = 0, size = armada.size(); i < size; i++)
-	if (armada[i]->NoMoreShots() && armada[i]->NoMoreFoes())
-	    armada[i]->Cleanup();
-            // delete (armada[i]);
-
     while (!armada.empty())
 	armada.pop_back();
     armada.clear();
@@ -52,36 +46,74 @@ void	Armada::HandleCollisions(Player	*player)
 
 void	Armada::Update(Player	*player)
 {
-    // FIXME: do something for end of enemy cycle
-
-    // First: add new party has defined in Preset at inter.
-    interval--;
-    if (interval <= 0)
+    if (!this->Defeated())
     {
-	// int pre = preset.front();
-	// int type = pre / 100, inter = (pre / 10) % 10, size = pre % 10;
 
-	Party	*newparty = new Party(1, 250, 3);
-	newparty->Init();
-	armada.push_back(newparty);
+	// First: add new party as defined in Preset at inter.
+	interval--;
+	if ((interval <= 0) && (!preset.empty()))
+	{
+	    // Party	*newparty = new Party(1, 1500, 3);
+	    Party	*newparty = new Party(this->popPreset());
+	    newparty->Init();
+	    armada.push_back(newparty);
 
-	interval = hourglass;
+	    std::cout << "New Party?" << std::endl;
+
+	    interval = hourglass;
+	}
+
+	// Second: HandleCollisions with Player
+	this->HandleCollisions(player);
+
+	// Third: Update() all parties
+	for (unsigned i = 0, size = armada.size(); i < size; i++)
+	    armada[i]->Update(player);
+
+	// Fourth: Clean vector of Party if some parties are defeated
+	if (this->Sanitize())
+	    this->Cleanup();
+
     }
-
-    // Second: Update() all parties
-    for (unsigned i = 0, size = armada.size(); i < size; i++)
-	armada[i]->Update(player);
-
-    // Third: Clean vector of Party if some parties are defeated
-    for (unsigned i = 0, size = armada.size(); i < size; i++)
-	if (armada[i]->NoMoreShots() && armada[i]->NoMoreFoes())
-	    armada[i]->Cleanup();
+    else
+    {
+        CallBoss(); // but once tho or... wotever
+        // Boss is a Solo Party?
+    }
 }
 
 void	Armada::Draw(CGameEngine	*game)
 {
     for (unsigned i = 0, size = armada.size(); i < size; i++)
+	// draw if not Out, but vector is already sanitized
 	armada[i]->Draw(game);
+}
+void	static Test() { std::cout << "'cause fuck you" << std::endl; }
+bool	Armada::Sanitize()
+{
+    int	nexto = this->GetPartyOuted();
+
+    while (nexto > 0)
+    {
+	armada[nexto]->Cleanup();
+	armada.erase(armada.begin() + nexto);
+	Test();
+	nexto = this->GetPartyOuted();
+    }
+
+    return (this->Defeated());
+}
+
+int	Armada::GetPartyOuted()
+{
+    int	i = 0, size = armada.size();
+
+    while ((i < size) && (!armada[i]->PartyOut())) // shouldn't exists anymore
+	i++;
+
+    if (i >= size)
+	return (-1);
+    return i;
 }
 
 void	Armada::addPreset(int	newPreset)
@@ -94,4 +126,15 @@ int	Armada::popPreset()
     int tmp = preset.front();
     preset.pop_front();
     return tmp;
+}
+
+bool	Armada::Defeated()
+{
+    return false;
+}
+
+void	Armada::CallBoss()
+{
+    std::cout << "And there shall be presented thy enemy."
+	      << std::endl;
 }

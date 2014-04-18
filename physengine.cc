@@ -26,6 +26,26 @@ bool	PhysicEngine::ShiftRight(SDL_Rect	&object)
     return true;
 }
 
+// Boundary management
+
+bool	PhysicEngine::OnScreen(SDL_Rect		*object)
+{
+    return ((0 < object->y + object->h) && (object->y < HEIGHT) &&
+	    (0 < object->x + object->w) && (object->x < WIDTH));
+}
+
+bool	PhysicEngine::OffScreen(SDL_Rect	*object)
+{
+    return ((object->y + object->h < 0) || (object->y >= HEIGHT) ||
+	    (object->x + object->w < 0) || (object->x >= WIDTH));
+}
+
+bool	PhysicEngine::LeaveScreen(SDL_Rect	*object)
+{
+    return ((object->y + object->h < 0) || (object->y + object->h >= HEIGHT) ||
+	    (object->x + object->w < 0) || (object->x + object->w >= WIDTH));
+}
+
 // Collision management
 
 static bool	CollideTop(SDL_Rect	*object,

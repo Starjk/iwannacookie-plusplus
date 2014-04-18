@@ -11,14 +11,16 @@ Foe::Foe(int	hp,
 {
     health = hp;
     speed = actual_speed;
-    foe_type = 1;	// FIXME: include moar enemy types
-    point = 100;	// FIXME: include moar enemy types
-    EndExistence();
+    foe_type = 1;	// TODO: include moar enemy types
+    point = 100;	// TODO: include moar enemy types
+    this->EndExistence();
 }
 
 void Foe::Init()
 {
     if (foe_type == 1)
+	spaceship = IMG_Load("media/img/ship_e1.png");
+    else if (foe_type == 2)
 	spaceship = IMG_Load("media/img/ship_e1.png");
 
     ship_rect.x = 180;
@@ -26,48 +28,45 @@ void Foe::Init()
     ship_rect.w = 45;
     ship_rect.h = 57;
 
-    frequency = SHOT_FREQ;
-    StartExistence();
+    if (foe_type == 2)
+    {
+	ship_rect.x += 500;
+	ship_rect.y -= 25;
+    }
+
+    frequency = FOE_SHOT_FREQ;
+    this->StartExistence();
 
     std::cout << "Foe Init" << std::endl;
 }
 
 void Foe::Cleanup()
 {
-    SDL_FreeSurface(spaceship);
-
-    std::cout << "Foe Cleanup" << std::endl;
+    if (spaceship != NULL)
+    {
+	SDL_FreeSurface(spaceship);
+	spaceship = NULL;
+	std::cout << "Foe Cleanup" << std::endl;
+    }
 }
 
-void Foe::MoveUp()
+void Foe::Mobility(/* Ship *ship */)
 {
-    ship_rect.y -= speed;
-}
-
-void Foe::MoveDown()
-{
-    ship_rect.y += speed;
-}
-
-void Foe::MoveLeft()
-{
-    ship_rect.x -= speed * 3;
-}
-
-void Foe::MoveRight()
-{
-    ship_rect.x += speed * 3;
-}
-
-void Foe::ActiveUnit(/* Ship *ship */)
-{
-    MoveRight();
-    MoveDown();
+    if (foe_type == 1)
+    {
+	MoveRight();
+	MoveDown();
+    }
+    else if (foe_type == 2)
+    {
+	MoveLeft();
+    }
 }
 
 void Foe::Aggression(Ship *ship, std::vector<Weaponry*> *shots)
 {
-    if (abs(ship->getRect()->x - ship_rect.x) < SHOT_DISTANCE)
+    if ((ship->DoesExists()) &&
+	(abs(ship->getRect()->x - ship_rect.x) < FOE_SHOT_DISTANCE))
     {
 	// spacing out the shots
 	frequency -= 5;
@@ -80,7 +79,7 @@ void Foe::Aggression(Ship *ship, std::vector<Weaponry*> *shots)
 
 	    std::cout << "Foe Shoot: Shot!" << std::endl;
 
-	    frequency = SHOT_FREQ;
+	    frequency = FOE_SHOT_FREQ;
 	}
     }
 }
@@ -88,25 +87,34 @@ void Foe::Aggression(Ship *ship, std::vector<Weaponry*> *shots)
 void Foe::HandleEvents()
 {
     if (health <= 0)
+    {
+	this->EndExistence();
 	std::cout << "Boom. Out." << std::endl;
+    }
 }
 
 void Foe::Update()
 {
     // why, though?!
     frequency--;
+
+    // if out of screen, EndExistence()
+    if (PhysicEngine::OffScreen(this->getRect()))
+	this->EndExistence();
 }
 
 void Foe::Draw(CGameEngine	*game)
 {
-    SDL_BlitSurface(spaceship, NULL, game->screen, &ship_rect);
+    if (this->DoesExists())
+	// FIXME: check if rect x and y are negative or not
+	SDL_BlitSurface(spaceship, NULL, game->screen, &ship_rect);
 }
 
 void Foe::TakesDamages(int	value)
 {
     health -= value;
     if (health <= 0)
-	EndExistence();
+	this->EndExistence();
 }
 
 void Foe::HandleCollisions(Ship		*ship)

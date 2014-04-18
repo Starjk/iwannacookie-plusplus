@@ -9,6 +9,8 @@
 #include "weapon.hh"
 #include "foe.hh"
 
+#define SHOT_FREQ	100
+
 class Foe;
 
 class Player : public Ship
@@ -30,6 +32,10 @@ public:
     void Update();
     void Draw(CGameEngine	*game);
 
+    bool Sanitize();		// manage cleaning of All Shots
+    int	GetStationary();
+    bool NoMoreShots();
+
     void MoveUp();
     void MoveDown();
     void MoveLeft();
@@ -41,28 +47,24 @@ public:
 
     void TakesDamages(int	value);
 
-    void HandleCollisions(Ship	*ship);
+    // void HandleCollisions(Ship	*ship);
     void HandleShooting(std::vector<Foe*> foes);
 
     // GettersxSetters
     void setPower(int fire_power) { firetype = fire_power; }
     int getPower() const { return firetype; }
 
+    void setLife(int heart) { life = heart; }
+    int getLife() const { return life; }
+
+    std::vector<Weaponry*> *getFireworks() { return &firepower; }
+
 private:
 
     // player fundamental stats
     int		life;
-    /**
-    int		speed;	// lateral move are 3 times speed
-    int		firetype;
-    */
-
     // aim to keep all visible shoot on screen
     std::vector<Weaponry*>	firepower;
-    /**
-    // manage spacing between shots
-    int		frequency;
-    */
 };
 
 #endif /* PLAYER_HH_ */

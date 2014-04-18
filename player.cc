@@ -23,7 +23,7 @@ void Player::Init()
     ship_rect.w = 39;
     ship_rect.h = 52;
 
-    frequency = 100;
+    frequency = SHOT_FREQ;
 
     StartExistence();
     std::cout << "Player Init" << std::endl;
@@ -31,50 +31,16 @@ void Player::Init()
 
 void Player::Cleanup()
 {
-    // FIXME: if Doesnt Exists, cleanup
-    SDL_FreeSurface(spaceship);
-    for (unsigned i = 0, size = firepower.size(); i < size; i++)
-	firepower[i]->Cleanup();
-
-    std::cout << "Player Cleanup" << std::endl;
-}
-
-void Player::MoveUp()
-{
-    ship_rect.y -= speed;
-}
-
-void Player::MoveDown()
-{
-    ship_rect.y += speed;
-}
-
-void Player::MoveLeft()
-{
-    ship_rect.x -= speed * 3;
-}
-
-void Player::MoveRight()
-{
-    ship_rect.x += speed * 3;
-}
-
-void Player::NewShot(bool	is_foe)
-{
-    // spacing out the shots
-    frequency -= 5;
-    if (frequency <= 0)
+    if (spaceship != NULL)
     {
-
-	Weaponry *shot = new Weaponry(firetype, 50, 5, is_foe);
-	shot->Init(ship_rect);
-	shot->StartMotion();
-	firepower.push_back(shot);
-
-	std::cout << "Player Shoot: Shot!" << std::endl;
-
-	frequency = 100;
+	SDL_FreeSurface(spaceship);
+	spaceship = NULL;
+	std::cout << "Player Cleanup" << std::endl;
     }
+
+    for (unsigned i = 0, size = firepower.size(); i < size; i++)
+	if (firepower[i]->GetMotion())
+	    firepower[i]->Cleanup();
 }
 
 void Player::HandleEvents()
@@ -91,10 +57,6 @@ void Player::HandleEvents()
 	MoveRight();
     if (keys[SDLK_SPACE])
 	NewShot();
-
-    if (health <= 0)
-	std::cout << "Boom. Out." << std::endl;
-
 }
 
 void Player::Update()
@@ -109,12 +71,30 @@ void Player::Update()
 	}
     }
 
+    if (this->Sanitize())
+    {
+	this->Cleanup();
+	return;
+    }
+
+    if (health <= 0)
+    {
+	this->EndExistence();
+	life--;
+    }
+    if (!DoesExists())
+    {
+	this->Sanitize();
+	if (this->getLife() > 0)
+	    std::cout << "Regenerate Player routine" << std::endl;
+    }
+
     frequency--;
 }
 
 void Player::Draw(CGameEngine	*game)
 {
-    if (KeepAlive())
+    if (KeepAlive() && DoesExists())
 	SDL_BlitSurface(spaceship, NULL, game->screen, &ship_rect);
 
     for (unsigned i = 0, size = firepower.size(); i < size; i++)
@@ -122,30 +102,122 @@ void Player::Draw(CGameEngine	*game)
 	    firepower[i]->Draw(game);
 }
 
+bool Player::Sanitize()
+{
+    int	nexts = this->GetStationary();
+
+    while (nexts > 0)
+    {
+	firepower[nexts]->Cleanup();
+	firepower.erase(firepower.begin() + nexts);
+	nexts = this->GetStationary();
+    }
+
+    return (NoMoreShots() &&
+	    (!this->KeepAlive()) && (this->getLife() <= 0));
+    // aka NoMoreShots and GameOver/LostGame();
+}
+
+int Player::GetStationary()
+{
+    int	i = 0, size = firepower.size();
+
+    while ((i < size) && (firepower[i]->GetMotion()))
+	i++;
+
+    if (i >= size)
+	return (-1);
+    return i;
+}
+
+// FIXME: I am the same function as in class Party
+bool Player::NoMoreShots()
+{
+    bool	shots = false;	// assume there are no shots
+
+    for (unsigned i = 0, size = firepower.size(); i < size; i++)
+    {
+	shots = firepower[i]->GetMotion();	// shot exists
+	if (shots)
+	    break;
+    }
+
+    return (!shots);
+}
+
+void Player::MoveUp()
+{
+    ship_rect.y -= speed;
+    if (PhysicEngine::LeaveScreen(&ship_rect))
+	ship_rect.y += speed;
+}
+
+void Player::MoveDown()
+{
+    ship_rect.y += speed;
+    if (PhysicEngine::LeaveScreen(&ship_rect))
+	ship_rect.y -= speed;
+}
+
+void Player::MoveLeft()
+{
+    ship_rect.x -= speed * 3;
+    if (PhysicEngine::LeaveScreen(&ship_rect))
+	ship_rect.x += speed * 3;
+}
+
+void Player::MoveRight()
+{
+    ship_rect.x += speed * 3;
+    if (PhysicEngine::LeaveScreen(&ship_rect))
+	ship_rect.x -= speed * 3;
+}
+
+void Player::NewShot(bool	is_foe)
+{
+    // spacing out the shots
+    frequency -= 5;
+    if ((frequency <= 0) && this->KeepAlive())
+    {
+
+	Weaponry *shot = new Weaponry(firetype, 50, 5, is_foe);
+	shot->Init(ship_rect);
+	shot->StartMotion();
+	firepower.push_back(shot);
+
+	std::cout << "Player Shoot: Shot!" << std::endl;
+
+	frequency = SHOT_FREQ;
+    }
+}
+
 void Player::TakesDamages(int	value)
 {
     health -= value;
-    if (health <= 0)
+    if ((health <= 0) && (this->DoesExists()))
 	std::cout << "Argh! I'm Dead!" << std::endl;
 }
 
-void Player::HandleCollisions(Ship	*ship)
-{
-    // FIXME: still coding
-    ship = ship;
-}
+// void Player::HandleCollisions(Ship	*ship)
+// {
+//     // FIXME: still coding
+//     ship = ship;
+// }
 
 void Player::HandleShooting(std::vector<Foe*>	foes)
 {
     // for all player's shot, check all enemies for C
     for (unsigned i = 0, pshots = firepower.size(); i < pshots; i++)
 	for (unsigned j = 0, size = foes.size(); j < size; j++)
-	    if (PhysicEngine::Collide(firepower[i]->getRect(),
-				      foes[j]->getRect()))
+	    if ((firepower[i]->GetMotion()) &&
+		(PhysicEngine::Collide(firepower[i]->getRect(),
+				       foes[j]->getRect())))
 	    {
 		foes[j]->TakesDamages(firepower[i]->getDamages());
 		firepower[i]->EndMotion();
 	    }
 
-    // FIXME: redo vector after a pass to REALLY cleanup the mess
+    // FIXME: clean firepower but not while looping on Vec firepower
+    // if (this->Sanitize())
+    // 	std::cout << "Did it work? Woot?! " << std::endl;
 }

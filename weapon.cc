@@ -52,7 +52,7 @@ void Weaponry::HandlePhysics()
 {
     if ((motion) &&
 	((fire_rect.y <= 0) || (fire_rect.y >= HEIGHT)))
-	EndMotion();
+	this->EndMotion();
 }
 
 void Weaponry::Update()

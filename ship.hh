@@ -23,12 +23,12 @@ public:
 
     virtual void TakesDamages(int	value) = 0;
 
-    virtual void HandleCollisions(Ship	*ship) = 0;
-    // FIXME: bool KeepAlive() or IsLive() or Exists()
-    virtual bool KeepAlive() { return (health > 0); }
+    // virtual void HandleCollisions(Ship	*ship) = 0;
+
+    virtual bool KeepAlive() { return ((health > 0)/* && OnScreen()*/); }
 
     virtual void StartExistence() { exists = true; }
-    virtual void EndExistence() { exists = false; }
+    virtual void EndExistence()	{ exists = false; }
     virtual bool DoesExists() const { return exists; }
 
     // GettersxSetters
@@ -38,15 +38,14 @@ public:
     SDL_Rect *getRect() { return &ship_rect; }
 
 protected:
+
     SDL_Surface		*spaceship;
     SDL_Rect		ship_rect;
     bool		exists;
-
     // ship fundamental stats
     int		health;
     int		speed;	// lateral move are 3 times speed
     int		firetype;	// could be player specific
-
     // manage spacing between shots
     int		frequency;
 };

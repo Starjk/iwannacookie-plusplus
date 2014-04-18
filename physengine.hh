@@ -3,7 +3,7 @@
 
 #include <SDL.h>
 
-#include "gameengine.hh"	// correspondence of WIDTH and HEIGHT
+#include "gameengine.hh" // correspondence of WIDTH and HEIGHT
 
 namespace PhysicEngine
 {
@@ -13,6 +13,11 @@ namespace PhysicEngine
     bool ShiftDown(SDL_Rect	&object);
     bool ShiftLeft(SDL_Rect	&object);
     bool ShiftRight(SDL_Rect	&object);
+
+    // Boundaries
+    bool OnScreen(SDL_Rect	*object);
+    bool OffScreen(SDL_Rect	*object);
+    bool LeaveScreen(SDL_Rect	*object);
 
     // Collision
 
