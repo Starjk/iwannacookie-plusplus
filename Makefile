@@ -1,6 +1,7 @@
 PROGRAM = shoot
 
-SOURCE = armada.cc firststate.cc foe.cc gameengine.cc menustate.cc party.cc pausestate.cc physengine.cc player.cc root.cc weapon.cc
+SOURCE = armada.cc foe.cc gameengine.cc graphengine.cc hud.cc levelstate.cc \
+menustate.cc party.cc pausestate.cc physengine.cc player.cc root.cc weapon.cc
 OBJECT = $(SOURCE:.cc=.o)
 
 GXX = g++

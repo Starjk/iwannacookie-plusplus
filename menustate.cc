@@ -6,25 +6,23 @@
 #include "gameengine.hh"
 #include "gamestate.hh"
 #include "menustate.hh"
-#include "firststate.hh"
+#include "levelstate.hh"
 
 CMenuState CMenuState::m_MenuState;
 
 void CMenuState::Init()
 {
+    // FIXME: manage fading better to still allow 'alpha--;'
     SDL_Surface	*temp = IMG_Load("media/img/titre.jpg");
-
     background = SDL_DisplayFormat(temp);
-
     SDL_FreeSurface(temp);
 
     // create the fader surface like the background with alpha
-    fader = SDL_CreateRGBSurface(SDL_SRCALPHA, background->w, background->h,
-				 background->format->BitsPerPixel,
-				 background->format->Rmask,
-				 background->format->Gmask,
-				 background->format->Bmask,
-				 background->format->Amask);
+    fader = SDL_CreateRGBSurface
+	(SDL_SRCALPHA, background->w, background->h,
+	 background->format->BitsPerPixel,
+	 background->format->Rmask, background->format->Gmask,
+	 background->format->Bmask, background->format->Amask);
 
     // fill the fader surface with black
     SDL_FillRect (fader, NULL, SDL_MapRGB (background->format, 0, 0, 0));
@@ -55,7 +53,7 @@ void CMenuState::Resume()
     std::cout << "CMenuState Resume" << std::endl;
 }
 
-void CMenuState::HandleEvents(CGameEngine	*game)
+void CMenuState::HandleEvents(GameEngine	*game)
 {
     SDL_Event event;
 
@@ -68,9 +66,8 @@ void CMenuState::HandleEvents(CGameEngine	*game)
 	case SDL_KEYDOWN:
 	    switch (event.key.keysym.sym) {
 	    case SDLK_RETURN:
-		game->PushState(FirstState::Instance());
-		// FIXME: cannot start new game, because PushState start a new Init() and because Singleton(?)
-		// game->ChangeState(FirstState::Instance());
+		game->GraEng->Init();
+		game->PushState(new LevelState());
 		break;
 
 	    case SDLK_ESCAPE:
@@ -86,7 +83,7 @@ void CMenuState::HandleEvents(CGameEngine	*game)
     }
 }
 
-void CMenuState::Update(CGameEngine		*game)
+void CMenuState::Update(GameEngine		*game)
 {
     // FIXME: compile flags
     game = game;
@@ -99,8 +96,9 @@ void CMenuState::Update(CGameEngine		*game)
     SDL_SetAlpha(fader, SDL_SRCALPHA, alpha);
 }
 
-void CMenuState::Draw(CGameEngine		*game)
+void CMenuState::Draw(GameEngine		*game)
 {
+    // SDL_BlitSurface(game->GraEng->GetGameTitle(), NULL, game->screen, NULL);
     SDL_BlitSurface(background, NULL, game->screen, NULL);
 
     // No need to blit if it's a transparent surface

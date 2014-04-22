@@ -7,10 +7,7 @@
 #include "foe.hh"
 #include "weapon.hh"
 
-// #include "physengine.hh"
-// #include "player.hh"
-
-#define	MOB_CONTROL		350	// mob_control
+#define	MOB_CONTROL		350
 
 class Party
 {
@@ -22,15 +19,14 @@ public:
     Party(int	inter, int	size);
     Party(int	type, int	inter, int	size);
 
-    void Init(); // hourglass = interval;
-    void Cleanup(); // check if clean up to do, then clear
+    void Init();
+    void Cleanup();
 
     // for all enemies, check all shots for C w/ player, also
     // for all player's shot, check all enemies for C
-    void HandleCollisions(Player *player);
-    // void HandleEvent(); ? Really?
-    void Update(Player		*player);
-    void Draw(CGameEngine	*game);
+    unsigned HandleCollisions(Player *player);
+    void Update(Player	*player);
+    void Draw(GameEngine	*game);
 
     // Remove elements if Cease to exists or HP <= 0
     bool Sanitize();
@@ -45,7 +41,6 @@ public:
     // Manage vector of Weapon for enemies
     void FireworksControl(Player	*player);
 
-    // if partysize = 0 and NoMoreFoes(), party out (not defeated per se)
     bool PartyOut();
 
     // GettersxSetters
@@ -71,35 +66,8 @@ private:
     int			interval;	// decreasing value
     std::vector<Weaponry*>	fireworks;
 
-    int			score;		// add up score from all foes
     int			mob_control;
     int			tick;
 };
-
-/*
-class Party
-{
-public:
-
-    void HandleInterval(CGameEngine	*game); // FIXM.: not sure
-    void Update(CGameEngine	*game); // up conditions of enemies/shots/overall-party
-    void Draw(CGameEngine	*game); // draw all legits enemies/shots
-
-    // FIXM.: dafuk?! from Party, get Party, for newRound?!
-    //void NewRound(Party);
-
-    bool Summon() { return (hourglass <= 0); }
-    void TickDown() { hourglass--; }
-    void TurnHourglass() { if (hourglass <= 0) hourglass = interval; }
-
-    bool PartyDefeated(); // for all elts in party, 'no KeepAlive' or out of scope/screen
-    void SummonBoss(int	bosstype, int health);
-
-    void NewChallenger(); // push new Foe in party (?)
-    void MobControl(); // check KeepAlive, Mobility, Aggression, Update, Cleanup? (and return point?)
-    void FireworksControl(); // manage Enemies' weapon
-
-};
-*/
 
 #endif /* _PARTY_HH_ */

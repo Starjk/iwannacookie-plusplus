@@ -16,9 +16,9 @@ public:
     void Pause();
     void Resume();
 
-    void HandleEvents(CGameEngine	*game);
-    void Update(CGameEngine	*game);
-    void Draw(CGameEngine	*game);
+    void HandleEvents(GameEngine	*game);
+    void Update(GameEngine	*game);
+    void Draw(GameEngine	*game);
 
     // Singleton B
     static CPauseState	*Instance() { return &m_PauseState; }
@@ -30,7 +30,8 @@ private:
     static CPauseState	m_PauseState;
     // End singleton B
 
-    SDL_Surface		*background;
+    // FIXME: wait for 'alpha fix'
+    // SDL_Surface		*background;
 };
 
 #endif /* PAUSESTATE_HH_ */

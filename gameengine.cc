@@ -1,7 +1,8 @@
 #include "gameengine.hh"
 #include "gamestate.hh"
+#include "graphengine.hh"
 
-void CGameEngine::Init(const char	*title,
+void GameEngine::Init(const char	*title,
 		       int	width,
 		       int	height,
 		       int	bpp,
@@ -29,10 +30,10 @@ void CGameEngine::Init(const char	*title,
     is_fullscreen = fullscreen;
     is_running = true;
 
-    std::cout << "CGameEngine Init" << std::endl;
+    GraEng = new GraphEngine();
 }
 
-void CGameEngine::Cleanup()
+void GameEngine::Cleanup()
 {
     // cleanup the all states
     while (!states.empty())
@@ -46,13 +47,13 @@ void CGameEngine::Cleanup()
     if (is_fullscreen)
 	screen = SDL_SetVideoMode(800, 600, 0, 0);
 
-    std::cout << "CGameEngine Cleanup" << std::endl;
+    GraEng->Cleanup();
 
     // $ kill -9 SDL
     SDL_Quit();
 }
 
-void CGameEngine::ChangeState(CGameState* state)
+void GameEngine::ChangeState(CGameState* state)
 {
     // cleanup the current state
     if (!states.empty())
@@ -66,7 +67,7 @@ void CGameEngine::ChangeState(CGameState* state)
     states.back()->Init();
 }
 
-void CGameEngine::PushState(CGameState* state)
+void GameEngine::PushState(CGameState* state)
 {
     // pause current state
     if (!states.empty())
@@ -77,7 +78,7 @@ void CGameEngine::PushState(CGameState* state)
     states.back()->Init();
 }
 
-void CGameEngine::PopState()
+void GameEngine::PopState()
 {
     // cleanup the current state
     if (!states.empty())
@@ -91,19 +92,19 @@ void CGameEngine::PopState()
 	states.back()->Resume();
 }
 
-void CGameEngine::HandleEvents()
+void GameEngine::HandleEvents()
 {
     // let the current (topmost) state handle events
     states.back()->HandleEvents(this);
 }
 
-void CGameEngine::Update()
+void GameEngine::Update()
 {
     // let the current (topmost) state update the game
     states.back()->Update(this);
 }
 
-void CGameEngine::Draw()
+void GameEngine::Draw()
 {
     // let the current (topmost) state draw the screen
     states.back()->Draw(this);

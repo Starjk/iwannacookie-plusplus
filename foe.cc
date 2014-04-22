@@ -11,6 +11,7 @@ Foe::Foe(int	hp,
 {
     health = hp;
     speed = actual_speed;
+    firetype = 1;
     foe_type = 1;	// TODO: include moar enemy types
     point = 100;	// TODO: include moar enemy types
     this->EndExistence();
@@ -18,11 +19,6 @@ Foe::Foe(int	hp,
 
 void Foe::Init()
 {
-    if (foe_type == 1)
-	spaceship = IMG_Load("media/img/ship_e1.png");
-    else if (foe_type == 2)
-	spaceship = IMG_Load("media/img/ship_e1.png");
-
     ship_rect.x = 180;
     ship_rect.y = 74;
     ship_rect.w = 45;
@@ -42,12 +38,7 @@ void Foe::Init()
 
 void Foe::Cleanup()
 {
-    if (spaceship != NULL)
-    {
-	SDL_FreeSurface(spaceship);
-	spaceship = NULL;
-	std::cout << "Foe Cleanup" << std::endl;
-    }
+    std::cout << "Foe Cleanup" << std::endl;
 }
 
 void Foe::Mobility(/* Ship *ship */)
@@ -95,26 +86,29 @@ void Foe::HandleEvents()
 
 void Foe::Update()
 {
-    // why, though?!
     frequency--;
 
-    // if out of screen, EndExistence()
+    // FIXME: check if rect x and y are/should be negative or not
     if (PhysicEngine::OffScreen(this->getRect()))
 	this->EndExistence();
 }
 
-void Foe::Draw(CGameEngine	*game)
+void Foe::Draw(GameEngine	*game)
 {
     if (this->DoesExists())
-	// FIXME: check if rect x and y are negative or not
-	SDL_BlitSurface(spaceship, NULL, game->screen, &ship_rect);
+	SDL_BlitSurface(game->GraEng->GetFoe(foe_type),
+			NULL, game->screen, &ship_rect);
 }
 
-void Foe::TakesDamages(int	value)
+unsigned Foe::TakesDamages(int	value)
 {
     health -= value;
     if (health <= 0)
+    {
 	this->EndExistence();
+        return (this->getPoint());
+    }
+    return 0;
 }
 
 void Foe::HandleCollisions(Ship		*ship)

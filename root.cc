@@ -11,7 +11,7 @@ int	main(void)
 
 int	main_loop(void)
 {
-    CGameEngine	game;
+    GameEngine	game;
 
     // initialize the engine
     game.Init("CookieEngine Test v0.1");

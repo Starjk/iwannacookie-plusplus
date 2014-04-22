@@ -6,13 +6,15 @@
 
 #include <SDL.h>
 
+#include "graphengine.hh"
+
 #define WIDTH	800
 #define HEIGHT	600
 
 // Forward declaration
 class CGameState;
 
-class CGameEngine
+class GameEngine
 {
 public:
 
@@ -35,6 +37,8 @@ public:
     void Quit() { is_running = false; }
 
     SDL_Surface	*screen;
+
+    GraphEngine	*GraEng;
 
 private:
     // the stack of states

@@ -22,7 +22,7 @@ public:
 
     void HandlePhysics();
     void Update();
-    void Draw(CGameEngine	*game);
+    void Draw(GameEngine	*game);
 
     void StartMotion() { motion = true; }
     void EndMotion() { motion = false; }
@@ -35,7 +35,6 @@ public:
     SDL_Rect	*getRect() { return &fire_rect; }
 
 private:
-    SDL_Surface	*shoot;
     SDL_Rect	fire_rect;
     int		firetype;
     int		damages;

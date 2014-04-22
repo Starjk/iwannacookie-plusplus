@@ -1,5 +1,7 @@
 error: ‘IMG_Load’ was not declared in this scope
        Was refering to SDL_image (not 'I'mage) not included and not linked
 
+warning: for bg image (only large file?), if no SDL_DisplayFormat "trick", game is slow!
+
 Foe not leaving screen if going left!!
 

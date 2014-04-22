@@ -22,7 +22,6 @@ namespace PhysicEngine
     // Collision
 
     // Does the object collide with target:
-    //   top? bottom? left? right?
     bool Collide(SDL_Rect	*object,
 		 SDL_Rect	*target);
 

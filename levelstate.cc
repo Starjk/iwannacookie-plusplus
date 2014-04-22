@@ -5,23 +5,14 @@
 #include <SDL_image.h>
 
 #include "gameengine.hh"
+#include "hud.hh"
 #include "gamestate.hh"
-#include "firststate.hh"
+#include "levelstate.hh"
 #include "menustate.hh"
 #include "pausestate.hh"
 
-FirstState FirstState::m_FirstState;
-
-void	FirstState::Init()
+void	LevelState::Init()
 {
-    SDL_Surface	*temp = IMG_Load("media/img/background_1.jpg");
-
-    background = SDL_DisplayFormat(temp);
-
-    SDL_FreeSurface(temp);
-
-    std::cout << "FirstState Init" << std::endl;
-
     bg_focus.x = 0;
     bg_focus.y = 4400;
     bg_focus.w = WIDTH;
@@ -31,33 +22,30 @@ void	FirstState::Init()
     tick = 5;
 
     player.Init();
-    armada.Init(1);
+    armada.Init(level);
 
-    score = 0;
+    std::cout << "LevelState Init" << std::endl;
 }
 
-void	FirstState::Cleanup()
+void	LevelState::Cleanup()
 {
-    SDL_FreeSurface(background);
-
-    std::cout << "FirstState Cleanup" << std::endl;
+    std::cout << "LevelState Cleanup" << std::endl;
 
     player.Cleanup();
     armada.Cleanup();
-    // FIXME: when called, massive SEGFAULT & should free more stuff
 }
 
-void	FirstState::Pause()
+void	LevelState::Pause()
 {
-    std::cout << "FirstState Pause" << std::endl;
+    std::cout << "LevelState Pause" << std::endl;
 }
 
-void	FirstState::Resume()
+void	LevelState::Resume()
 {
-    std::cout << "FirstState Resume" << std::endl;
+    std::cout << "LevelState Resume" << std::endl;
 }
 
-void	FirstState::HandleEvents(CGameEngine	*game)
+void	LevelState::HandleEvents(GameEngine	*game)
 {
     SDL_Event	event;
 
@@ -83,41 +71,48 @@ void	FirstState::HandleEvents(CGameEngine	*game)
 	default:
 	    break;
 	}
-
     }
 
     if (cycle <= tick)
 	player.HandleEvents();
 
     if ((!player.KeepAlive() && (!player.DoesExists()))/* || GameOver()*/)
-	// TODO: must destroy the singleton otherwise, I leave menu to restart where I died
+    {	// game over
     	game->PopState();
+	game->GraEng->Cleanup();
+    }
+    // else if Boss Defeated
+    // {
+    // 	game->ChangeState(new LevelState(level + 1, score));
+    // }
 }
 
-void	FirstState::Update(CGameEngine	*game)
+void	LevelState::Update(GameEngine	*game)
 {
     // FIXME: compile flags
     game = game;
 
     ScrollBackground();
 
-    // armada.HandleCollisions(&player);
     player.Update();
-    armada.Update(&player);
+    score += armada.Update(&player);
 }
 
-void	FirstState::Draw(CGameEngine	*game)
+void	LevelState::Draw(GameEngine	*game)
 {
-    SDL_BlitSurface(background, &bg_focus, game->screen, NULL);
+    SDL_BlitSurface(game->GraEng->GetBackground(),
+		    &bg_focus, game->screen, NULL);
 
     player.Draw(game);
     armada.Draw(game);
+
+    HUD::DisplayHUD(&player, score, game);
 
     // Always last function
     SDL_UpdateRect(game->screen, 0, 0, 0, 0);
 }
 
-void	FirstState::ScrollBackground()
+void	LevelState::ScrollBackground()
 {
     cycle -= tick;
     if (cycle <= 0)

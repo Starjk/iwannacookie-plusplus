@@ -14,28 +14,27 @@ public:
 
     virtual void HandleEvents() = 0;
     virtual void Update() = 0;
-    virtual void Draw(CGameEngine	*game) = 0;
+    virtual void Draw(GameEngine	*game) = 0;
 
     virtual void MoveUp() = 0;
     virtual void MoveDown() = 0;
     virtual void MoveLeft() = 0;
     virtual void MoveRight() = 0;
 
-    virtual void TakesDamages(int	value) = 0;
-
-    // virtual void HandleCollisions(Ship	*ship) = 0;
-
     virtual bool KeepAlive() { return ((health > 0)/* && OnScreen()*/); }
-
-    virtual void StartExistence() { exists = true; }
-    virtual void EndExistence()	{ exists = false; }
-    virtual bool DoesExists() const { return exists; }
 
     // GettersxSetters
     virtual void setPower(int fire_power) = 0;
     virtual int getPower() const = 0;
 
     SDL_Rect *getRect() { return &ship_rect; }
+
+    virtual void StartExistence() { exists = true; }
+    virtual void EndExistence()	{ exists = false; }
+    virtual bool DoesExists() const { return exists; }
+
+    virtual void setHealth(int hp) { health = hp; }
+    virtual int getHealth() const { return health; }
 
 protected:
 

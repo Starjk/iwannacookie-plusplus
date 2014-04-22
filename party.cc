@@ -33,7 +33,6 @@ void	Party::Init()
     interval = hourglass;
     mob_control = MOB_CONTROL;
     tick = 5;
-    score = 0;
 }
 
 void	Party::Cleanup()
@@ -47,16 +46,15 @@ void	Party::Cleanup()
     fireworks.clear();
 }
 
-void	Party::HandleCollisions(Player	*player)
+unsigned Party::HandleCollisions(Player	*player)
 {
-    for (unsigned i = 0, size = party.size(); i < size; i++)
-	party[i]->HandleCollisions(player);
-        // HandleCollisions: does any of my shots touch target rect?
-	// if so, call Player->TakesDamages(value);
+    // HandleCollisions: does any of their shots connect?
+    // if so, call Player->TakesDamages(value);
+    this->FireworksControl(player);
 
-    player->HandleShooting(party);
     // for every foes, does any of my shots touch foe rect?
     // if so, call Foe/Boss->TakesDamages(value);
+    return player->HandleShooting(party);
 }
 
 void	Party::Update(Player	*player)
@@ -69,32 +67,23 @@ void	Party::Update(Player	*player)
 	party.push_back(foe);
 	partysize--;
 
-	std::cout << "New Foe?" << std::endl;
-
 	interval = hourglass;
     }
 
     if (partysize < initsize)
     {
-    // for (unsigned i = 0, size = party.size(); i < size; i++)
-    // 	party[i]->Update();
 	this->MobControl(player);
 
-    // for (unsigned i = 0, size = fireworks.size(); i < size;i++)
-    // 	fireworks[i]->Update();
-	this->FireworksControl(player);
 	if (this->Sanitize())
 	    this->Cleanup();
     }
 }
 
-void	Party::Draw(CGameEngine	*game)
+void	Party::Draw(GameEngine	*game)
 {
     for (unsigned i = 0, size = party.size(); i < size; i++)
-	// draw if Exists, but vector is already sanitized
 	party[i]->Draw(game);
     for (unsigned i = 0, size = fireworks.size(); i < size; i++)
-	// draw if In Motion, but vector is already sanitized
 	fireworks[i]->Draw(game);
 }
 
@@ -179,20 +168,12 @@ void	Party::MobControl(Player	*player)
     {
 	for (unsigned i = 0, size = party.size();
 	     i < size; i++)
-	    if (party[i]->KeepAlive() &&
-		party[i]->DoesExists())
+	    if (party[i]->KeepAlive() && party[i]->DoesExists())
 	    {
 		party[i]->Mobility(/* toward &player? */);
-		party[i]->Aggression(player, &fireworks); // player?
+		party[i]->Aggression(player, &fireworks);
 		party[i]->Update();
 	    }
-	    else if (party[i]->DoesExists())
-	    { // meaning, party[i]->health <= 0
-		score += party[i]->getPoint();
-		party[i]->EndExistence();
-	    }
-	// if out of screen, doesn't exist already
-
 	mob_control = MOB_CONTROL;
     }
 }
@@ -205,13 +186,13 @@ void	Party::FireworksControl(Player	*player)
 	{
 	    fireworks[i]->Update();
 	    fireworks[i]->HandlePhysics();
-	}
 
-	if (PhysicEngine::Collide(fireworks[i]->getRect(),
-				  player->getRect()))
-	{
-	    player->TakesDamages(fireworks[i]->getDamages());
-	    fireworks[i]->EndMotion();
+	    if ((PhysicEngine::Collide(fireworks[i]->getRect(),
+				       player->getRect())))
+	    {
+		player->TakesDamages(fireworks[i]->getDamages());
+		fireworks[i]->EndMotion();
+	    }
 	}
     }
 }

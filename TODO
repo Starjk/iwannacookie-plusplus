@@ -1,16 +1,15 @@
 Manage Enemy type and mobility value
-Save or store surface loading somewhere in gameengine or graphicengine for better usage of memory
-Create HUD (new class? namespace with game* seems better), better manage score and health.
-Manage Boss Creation and Interaction
+Manage Boss Creation and Interaction (class Boss : public Foe)
+Foe not leaving screen if going left or top (rect can't have negative value?!)
+Manage Fading effect better (starter to manage animation? maybe explosion later on)
+Add Musics and Sounds (with Fmod?)
 
 List all current FIXME (grep -Rn FIXME *.[ch]* | grep -v "compile flags" | grep FIXME)
 
-armada.cc:18:    //FIXME: time between party, but also time before first party :/
-firststate.cc:47:    // FIXME: when called, massive SEGFAULT & should free more stuff
-foe.cc:109:	// FIXME: check if rect x and y are negative or not
-foe.cc:122:    // FIXME: still coding
-menustate.cc:72:		// FIXME: cannot start new game, because PushState start a new Init() and because Singleton(?)
-player.cc:133:// FIXME: I am the same function as in class Party
-player.cc:203://     // FIXME: still coding
-player.cc:220:    // FIXME: clean firepower but not while looping on Vec firepower
+armada.cc:16:    //FIXME: time between party, but also time before first party :/
+armada.cc:128:    // FIXME: no boss?! This is Sacrilege!
+foe.cc:91:    // FIXME: check if rect x and y are/should be negative or not
+foe.cc:116:    // FIXME: still coding
+menustate.cc:15:    // FIXME: manage fading better to still allow 'alpha--;'
+pausestate.hh:33:    // FIXME: wait for 'alpha fix'
 weapon.cc:13:    // FIXME: add switch for firetype and give out appropriate values

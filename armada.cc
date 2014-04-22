@@ -3,8 +3,6 @@
 #include <SDL_image.h>
 
 #include "armada.hh"
-//#include "player.hh"
-//#include "foe.hh"
 
 Armada::Armada(int	lvl, int	inter)
 {
@@ -38,57 +36,50 @@ void	Armada::Cleanup()
     armada.clear();
 }
 
-void	Armada::HandleCollisions(Player	*player)
-{
-    for (unsigned i = 0, size = armada.size(); i < size; i++)
-	armada[i]->HandleCollisions(player);
-}
-
-void	Armada::Update(Player	*player)
+unsigned Armada::Update(Player	*player)
 {
     if (!this->Defeated())
     {
-
+	unsigned score = 0;
 	// First: add new party as defined in Preset at inter.
 	interval--;
 	if ((interval <= 0) && (!preset.empty()))
 	{
-	    // Party	*newparty = new Party(1, 1500, 3);
 	    Party	*newparty = new Party(this->popPreset());
 	    newparty->Init();
 	    armada.push_back(newparty);
 
 	    std::cout << "New Party?" << std::endl;
-
 	    interval = hourglass;
 	}
 
-	// Second: HandleCollisions with Player
-	this->HandleCollisions(player);
-
-	// Third: Update() all parties
 	for (unsigned i = 0, size = armada.size(); i < size; i++)
+	{
+	    // Second: HandleCollisions with Player
+	    score += armada[i]->HandleCollisions(player);
+	    // Third: Update() all parties mvt/shooting
 	    armada[i]->Update(player);
+	}
 
-	// Fourth: Clean vector of Party if some parties are defeated
+	// Fourth: Clean vector of Party when parties are defeated
 	if (this->Sanitize())
 	    this->Cleanup();
 
+	return score;
     }
     else
     {
         CallBoss(); // but once tho or... wotever
-        // Boss is a Solo Party?
     }
+    return 0;
 }
 
-void	Armada::Draw(CGameEngine	*game)
+void	Armada::Draw(GameEngine	*game)
 {
     for (unsigned i = 0, size = armada.size(); i < size; i++)
-	// draw if not Out, but vector is already sanitized
 	armada[i]->Draw(game);
 }
-void	static Test() { std::cout << "'cause fuck you" << std::endl; }
+
 bool	Armada::Sanitize()
 {
     int	nexto = this->GetPartyOuted();
@@ -97,7 +88,6 @@ bool	Armada::Sanitize()
     {
 	armada[nexto]->Cleanup();
 	armada.erase(armada.begin() + nexto);
-	Test();
 	nexto = this->GetPartyOuted();
     }
 
@@ -135,6 +125,7 @@ bool	Armada::Defeated()
 
 void	Armada::CallBoss()
 {
+    // FIXME: no boss?! This is Sacrilege!
     std::cout << "And there shall be presented thy enemy."
 	      << std::endl;
 }

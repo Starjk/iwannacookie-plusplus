@@ -12,12 +12,13 @@ Player::Player(int	hp,
     health = hp;
     life = remaining_life;
     speed = actual_speed;
+    firetype = 1;
     EndExistence();
 }
 
 void Player::Init()
 {
-    spaceship = IMG_Load("media/img/red_ship.png");
+    // spaceship = IMG_Load("media/img/red_ship.png");
     ship_rect.x = 380;
     ship_rect.y = 274;
     ship_rect.w = 39;
@@ -26,18 +27,10 @@ void Player::Init()
     frequency = SHOT_FREQ;
 
     StartExistence();
-    std::cout << "Player Init" << std::endl;
 }
 
 void Player::Cleanup()
 {
-    if (spaceship != NULL)
-    {
-	SDL_FreeSurface(spaceship);
-	spaceship = NULL;
-	std::cout << "Player Cleanup" << std::endl;
-    }
-
     for (unsigned i = 0, size = firepower.size(); i < size; i++)
 	if (firepower[i]->GetMotion())
 	    firepower[i]->Cleanup();
@@ -76,7 +69,6 @@ void Player::Update()
 	this->Cleanup();
 	return;
     }
-
     if (health <= 0)
     {
 	this->EndExistence();
@@ -92,10 +84,11 @@ void Player::Update()
     frequency--;
 }
 
-void Player::Draw(CGameEngine	*game)
+void Player::Draw(GameEngine	*game)
 {
     if (KeepAlive() && DoesExists())
-	SDL_BlitSurface(spaceship, NULL, game->screen, &ship_rect);
+	SDL_BlitSurface(game->GraEng->GetPlayer(),
+			NULL, game->screen, &ship_rect);
 
     for (unsigned i = 0, size = firepower.size(); i < size; i++)
 	if (firepower[i]->GetMotion())
@@ -130,7 +123,7 @@ int Player::GetStationary()
     return i;
 }
 
-// FIXME: I am the same function as in class Party
+// NOTE: I am the exact same function as in class Party
 bool Player::NoMoreShots()
 {
     bool	shots = false;	// assume there are no shots
@@ -198,26 +191,21 @@ void Player::TakesDamages(int	value)
 	std::cout << "Argh! I'm Dead!" << std::endl;
 }
 
-// void Player::HandleCollisions(Ship	*ship)
-// {
-//     // FIXME: still coding
-//     ship = ship;
-// }
-
-void Player::HandleShooting(std::vector<Foe*>	foes)
+unsigned Player::HandleShooting(std::vector<Foe*>	foes)
 {
+    unsigned score = 0;
+
     // for all player's shot, check all enemies for C
     for (unsigned i = 0, pshots = firepower.size(); i < pshots; i++)
 	for (unsigned j = 0, size = foes.size(); j < size; j++)
-	    if ((firepower[i]->GetMotion()) &&
+	    if ((firepower[i]->GetMotion() && foes[j]->KeepAlive()) &&
 		(PhysicEngine::Collide(firepower[i]->getRect(),
 				       foes[j]->getRect())))
 	    {
-		foes[j]->TakesDamages(firepower[i]->getDamages());
+		score += foes[j]->TakesDamages(
+		    firepower[i]->getDamages());
 		firepower[i]->EndMotion();
 	    }
 
-    // FIXME: clean firepower but not while looping on Vec firepower
-    // if (this->Sanitize())
-    // 	std::cout << "Did it work? Woot?! " << std::endl;
+    return score;
 }

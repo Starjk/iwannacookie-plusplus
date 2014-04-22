@@ -28,6 +28,7 @@ public:
 	{
 	    health = 55;
 	    speed = 2;
+	    firetype = 1;
 	    foe_type = type;	// TODO: include moar enemy types
 	    point = 100;	// TODO: include moar enemy types
 	    EndExistence();
@@ -39,7 +40,7 @@ public:
 
     void HandleEvents();
     void Update();
-    void Draw(CGameEngine	*game);
+    void Draw(GameEngine	*game);
 
     void MoveUp() { ship_rect.y -= speed; }
     void MoveDown() { ship_rect.y += speed; }
@@ -50,7 +51,7 @@ public:
     void Mobility(/* Ship *ship */);
     // Manage shots nearing Player
     void Aggression(Ship *ship, std::vector<Weaponry*> *shots);
-    void TakesDamages(int	value);
+    unsigned TakesDamages(int	value);
     void HandleCollisions(Ship	*ship);
 
     // GettersxSetters

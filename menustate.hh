@@ -14,9 +14,9 @@ public:
     void Pause();
     void Resume();
 
-    void HandleEvents(CGameEngine	*game);
-    void Update(CGameEngine	*game);
-    void Draw(CGameEngine	*game);
+    void HandleEvents(GameEngine	*game);
+    void Update(GameEngine	*game);
+    void Draw(GameEngine	*game);
 
     // Singleton B
     static CMenuState* Instance() { return &m_MenuState; }

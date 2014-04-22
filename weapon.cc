@@ -6,9 +6,9 @@
 #include "weapon.hh"
 
 Weaponry::Weaponry(int	type,
-		     int	dmg,
-		     int	velocity,
-		     bool	is_foe)
+		   int	dmg,
+		   int	velocity,
+		   bool	is_foe)
 {
     // FIXME: add switch for firetype and give out appropriate values
     firetype = type;
@@ -21,11 +21,6 @@ Weaponry::Weaponry(int	type,
 
 void Weaponry::Init(SDL_Rect	ship_rect)
 {
-    if (is_enemys)
-	shoot = IMG_Load("media/img/fire_red.png");
-    else
-	shoot = SDL_LoadBMP("media/img/fire_blue.bmp");
-
     fire_rect.w = 8;
     fire_rect.h = 18;
     fire_rect.x = ship_rect.x + (ship_rect.w/2) - (fire_rect.w/2);
@@ -43,8 +38,6 @@ void Weaponry::Init(SDL_Rect	ship_rect)
 
 void Weaponry::Cleanup()
 {
-    SDL_FreeSurface(shoot);
-
     std::cout << "Shoot Cleanup" << std::endl;
 }
 
@@ -68,8 +61,15 @@ void Weaponry::Update()
     }
 }
 
-void Weaponry::Draw(CGameEngine	*game)
+void Weaponry::Draw(GameEngine	*game)
 {
     if (motion)
-	SDL_BlitSurface(shoot, NULL, game->screen, &fire_rect);
+    {
+	if (is_enemys)
+	    SDL_BlitSurface(game->GraEng->GetFoeFire(firetype),
+			    NULL, game->screen, &fire_rect);
+	else
+	    SDL_BlitSurface(game->GraEng->GetAllyFire(firetype),
+			    NULL, game->screen, &fire_rect);
+    }
 }
