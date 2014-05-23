@@ -18,7 +18,6 @@ Player::Player(int	hp,
 
 void Player::Init()
 {
-    // spaceship = IMG_Load("media/img/red_ship.png");
     ship_rect.x = 380;
     ship_rect.y = 274;
     ship_rect.w = 39;
@@ -50,6 +49,18 @@ void Player::HandleEvents()
 	MoveRight();
     if (keys[SDLK_SPACE])
 	NewShot();
+
+    // test purpose
+    if (keys[SDLK_k])
+    {
+	if (firetype < 6)
+	    firetype++;
+    }
+    if (keys[SDLK_l])
+    {
+	if (firetype > 0)
+	    firetype--;
+    }
 }
 
 void Player::Update()
@@ -140,43 +151,88 @@ bool Player::NoMoreShots()
 
 void Player::MoveUp()
 {
-    ship_rect.y -= speed;
-    if (PhysicEngine::LeaveScreen(&ship_rect))
-	ship_rect.y += speed;
+    if (ship_rect.y - speed > 0)
+	ship_rect.y -= speed;
 }
 
 void Player::MoveDown()
 {
-    ship_rect.y += speed;
-    if (PhysicEngine::LeaveScreen(&ship_rect))
-	ship_rect.y -= speed;
+    if (ship_rect.y + ship_rect.h + (speed*2) < HEIGHT)
+	ship_rect.y += speed*2;
 }
 
 void Player::MoveLeft()
 {
-    ship_rect.x -= speed * 3;
-    if (PhysicEngine::LeaveScreen(&ship_rect))
-	ship_rect.x += speed * 3;
+    if (ship_rect.x - (speed*3) > 0)
+	ship_rect.x -= speed * 3;
 }
 
 void Player::MoveRight()
 {
-    ship_rect.x += speed * 3;
-    if (PhysicEngine::LeaveScreen(&ship_rect))
-	ship_rect.x -= speed * 3;
+    if (ship_rect.x + ship_rect.w + (speed*3) < WIDTH)
+	ship_rect.x += speed * 3;
 }
 
-void Player::NewShot(bool	is_foe)
+void Player::NewShotByType(int	firetype)
+{
+    Weaponry *shot = NULL;
+
+    if (firetype <= SHOT_TYPE_THRESHOLD_1)
+	shot = new Weaponry(1, false, 'c');
+    else if (firetype <= SHOT_TYPE_THRESHOLD_2)
+    {
+	shot = new Weaponry(1, false, 'r');
+	shot->Init(ship_rect);
+	shot->StartMotion();
+	firepower.push_back(shot);
+	shot = new Weaponry(1, false, 'l');
+    }
+    else if (firetype <= SHOT_TYPE_THRESHOLD_3)
+    {
+	shot = new Weaponry(1, false, 'r');
+	shot->Init(ship_rect);
+	shot->StartMotion();
+	firepower.push_back(shot);
+	shot = new Weaponry(1, false, 'c');
+	shot->Init(ship_rect);
+	shot->StartMotion();
+	firepower.push_back(shot);
+	shot = new Weaponry(1, false, 'l');
+    }
+    else if (firetype <= SHOT_TYPE_THRESHOLD_4)
+    { // 'b' && 'd' && 'p' && 'q'
+	shot = new Weaponry(3, false, 'r');
+	shot->Init(ship_rect);
+	shot->StartMotion();
+	firepower.push_back(shot);
+	shot = new Weaponry(3, false, 'l');
+    }
+    else if (firetype <= SHOT_TYPE_THRESHOLD_5)
+    { // 'b' && 'd' && 'p' && 'q' && 'c'
+	shot = new Weaponry(1, false, 'l');
+    }
+    else if (firetype <= SHOT_TYPE_THRESHOLD_6)
+    { // 'b' && 'd' && 'p' && 'q' && 'a' && 'e'
+	shot = new Weaponry(1, false, 'r');
+    }
+    else
+	shot = new Weaponry(5, false, 'c');
+
+    // At least one shot is generated
+    shot->Init(ship_rect);
+    shot->StartMotion();
+    firepower.push_back(shot);
+}
+
+void Player::NewShot()
 {
     // spacing out the shots
     frequency -= 5;
     if ((frequency <= 0) && this->KeepAlive())
     {
-
-	Weaponry *shot = new Weaponry(firetype, 50, 5, is_foe);
-	shot->Init(ship_rect);
-	shot->StartMotion();
-	firepower.push_back(shot);
+	// FIXME: handle every type of shots for Player
+	if (firetype > 0)
+	    this->NewShotByType(firetype);
 
 	std::cout << "Player Shoot: Shot!" << std::endl;
 

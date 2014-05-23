@@ -66,8 +66,8 @@ void	LevelState::HandleEvents(GameEngine	*game)
 	    default:
 		break;
 	    }
-
 	    break;
+
 	default:
 	    break;
 	}
@@ -76,6 +76,7 @@ void	LevelState::HandleEvents(GameEngine	*game)
     if (cycle <= tick)
 	player.HandleEvents();
 
+    // FIXME: MY LIVES HAVE VALUE, I'M NOT GONNA TAKE IT ANYMORE
     if ((!player.KeepAlive() && (!player.DoesExists()))/* || GameOver()*/)
     {	// game over
     	game->PopState();

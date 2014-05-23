@@ -9,7 +9,14 @@
 #include "weapon.hh"
 #include "foe.hh"
 
-#define SHOT_FREQ	100
+#define SHOT_FREQ	250	// 100
+
+#define SHOT_TYPE_THRESHOLD_1	1
+#define SHOT_TYPE_THRESHOLD_2	2
+#define SHOT_TYPE_THRESHOLD_3	3
+#define SHOT_TYPE_THRESHOLD_4	4
+#define SHOT_TYPE_THRESHOLD_5	5
+#define SHOT_TYPE_THRESHOLD_6	6
 
 class Foe;
 
@@ -42,7 +49,8 @@ public:
     void MoveLeft();
     void MoveRight();
 
-    void NewShot(bool		is_foe=false);
+    void NewShot();
+    void NewShotByType(int	firetype);
     void UpgradeWeapon(/* Weaponry player_weapon */);
     void DownWeapon(/* Weaponry player_weapon */);
 

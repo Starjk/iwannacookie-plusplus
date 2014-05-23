@@ -21,7 +21,7 @@ void GraphEngine::Init(int	lvl)
 
     preload['d']=IMG_Load("media/img/red_ship.png");
     preload['e']=IMG_Load("media/img/ship_e1.png");
-    preload['f']=IMG_Load("media/img/ship_e1.png");
+    preload['f']=IMG_Load("media/img/ship_e2.png");
     preload['g']=SDL_LoadBMP("media/img/fire_blue.bmp");
     preload['h']=IMG_Load("media/img/fire_red.png");
     preload['i']=IMG_Load("media/img/heart.png");
@@ -70,14 +70,18 @@ SDL_Surface	*GraphEngine::GetPlayer()
 
 SDL_Surface	*GraphEngine::GetFoe(int	foetype)
 {
-    if (foetype > 1)
+    if ((foetype > 0) && (foetype <= 5))
+	return (preload['e']);
+    else if (foetype <= 10)
+	return (preload['f']);
+    else if (foetype <= 15)
 	return (preload['f']);
     return (preload['e']);
 }
 
 SDL_Surface	*GraphEngine::GetAllyFire(int	firetype)
 {
-    if (firetype != 1)
+    if ((firetype < 1) && (firetype > 5))
 	std::cout << "what is wrong w/ you?" << std::endl;
     return (preload['g']);
 }

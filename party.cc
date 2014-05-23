@@ -6,9 +6,9 @@
 
 Party::Party(int	preset)
 {
-    partytype = preset / 100;
-    hourglass = (preset / 10) % 10 * 1000;
-    partysize = preset % 10;
+    partytype = preset / 10000;
+    hourglass = (preset / 100) % 100 * 100;
+    partysize = preset % 100;
     initsize = partysize;
 }
 

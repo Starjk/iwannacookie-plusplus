@@ -13,19 +13,33 @@ Armada::Armada(int	lvl, int	inter)
 void	Armada::Init(int	lvl)
 {
     level = lvl;
-    //FIXME: time between party, but also time before first party :/
-    hourglass = 10000;
+    //FIXME: time between party == time before first party (:/)
+    hourglass = 7500;
     interval = hourglass;
 
     if (level == 1)
     {
-	addPreset(123);
-	addPreset(224);
+	addPreset(42503);	// fourth
+	addPreset(33003);	// fourth
+	addPreset(12003);
+	addPreset(22004);
+	addPreset(11006);
+	addPreset(21003);
+
+	addPreset(12003);
+	addPreset(22004);
+	addPreset(11006);
+	addPreset(21003);
+	addPreset(12003);
+	addPreset(22004);
+	addPreset(11006);
+	addPreset(21003);
     }
     if (level == 2)
     {
-	addPreset(116);
-	addPreset(224);
+	addPreset(12006);
+	addPreset(22004);
+	addPreset(11006);
     }
 }
 

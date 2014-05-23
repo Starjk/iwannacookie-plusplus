@@ -1,15 +1,27 @@
-Manage Enemy type and mobility value
+Refactoring of some piece of code to even it out
+Respawn, Boss and Mobility in Prio
+Manage Respawn and Upgrades
 Manage Boss Creation and Interaction (class Boss : public Foe)
-Foe not leaving screen if going left or top (rect can't have negative value?!)
+Manage Enemy type and mobility value | Weapon type too
 Manage Fading effect better (starter to manage animation? maybe explosion later on)
 Add Musics and Sounds (with Fmod?)
 
 List all current FIXME (grep -Rn FIXME *.[ch]* | grep -v "compile flags" | grep FIXME)
 
-armada.cc:16:    //FIXME: time between party, but also time before first party :/
-armada.cc:128:    // FIXME: no boss?! This is Sacrilege!
-foe.cc:91:    // FIXME: check if rect x and y are/should be negative or not
-foe.cc:116:    // FIXME: still coding
+armada.cc:16:    //FIXME: time between party == time before first party (:/)
+armada.cc:142:    // FIXME: no boss?! This is Sacrilege!
+foe.cc:141:    // FIXME: still coding
+foe.cc:151:    // FIXME: add private functions to manage all FoeType set
+foe.cc:161:	// FIXME: are bosses negative foe_type value?
+foe.cc:208:	    // FIXME: handle every type of shots for Foe
+foe.hh:63:    // FIXME: unsigned or else, technically, -1 fucks everything!
+levelstate.cc:79:    // FIXME: MY LIVES HAVE VALUE, I'M NOT GONNA TAKE IT ANYMORE
 menustate.cc:15:    // FIXME: manage fading better to still allow 'alpha--;'
 pausestate.hh:33:    // FIXME: wait for 'alpha fix'
-weapon.cc:13:    // FIXME: add switch for firetype and give out appropriate values
+player.cc:233:	// FIXME: handle every type of shots for Player
+weapon.cc:13:    // FIXME: manage dmg and speed in Constructor
+weapon.cc:93:    // FIXME: handle different origin of shots, given the type (sides?)
+weapon.cc:98:    // FIXME: only one type of shots red/blue, no variance for boss?
+weapon.cc:102:    // FIXME: manage position of each type of posx in Init
+weapon.cc:116:    // FIXME: use PhysicEngine to handle out of screen for shots
+weapon.cc:127:	// FIXME: if (guided)... pseudo-code below

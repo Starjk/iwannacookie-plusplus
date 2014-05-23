@@ -39,8 +39,8 @@ public:
 protected:
 
     SDL_Surface		*spaceship;
-    SDL_Rect		ship_rect;
-    bool		exists;
+    SDL_Rect	ship_rect;
+    bool	exists;
     // ship fundamental stats
     int		health;
     int		speed;	// lateral move are 3 times speed

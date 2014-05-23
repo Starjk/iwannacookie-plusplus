@@ -24,8 +24,8 @@ void CMenuState::Init()
 	 background->format->Rmask, background->format->Gmask,
 	 background->format->Bmask, background->format->Amask);
 
-    // fill the fader surface with black
-    SDL_FillRect (fader, NULL, SDL_MapRGB (background->format, 0, 0, 0));
+    // fill the fader surface with black (rgb=000)
+    SDL_FillRect(fader, NULL, SDL_MapRGB (background->format, 0, 0, 0));
 
     // start off opaque
     alpha = 255;

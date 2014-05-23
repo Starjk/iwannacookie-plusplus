@@ -11,13 +11,16 @@ public:
     Weaponry()
 	{
 	    firetype = 1;
+	    position_x = 'c';
 	    damages = 50;
 	    speed = 5;
 	    motion = false;
 	}
-    Weaponry(int type, int dmg, int velocity, bool is_foe=false);
+    Weaponry(int type, bool is_foe, char posx='c');
 
     void Init(SDL_Rect	ship_rect);
+    void InitSpec();
+    void InitPosition(SDL_Rect	ship_rect);
     void Cleanup();
 
     void HandlePhysics();
@@ -39,11 +42,14 @@ private:
     int		firetype;
     int		damages;
     int		speed;
+
     bool	motion;
     bool	is_enemys;
+    char	position_x;
 
     int		cycle;
     int		clockwork;
+
 };
 
 #endif /* WEAPON_HH_ */

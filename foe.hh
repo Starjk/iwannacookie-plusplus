@@ -9,31 +9,28 @@
 #include "weapon.hh"
 #include "player.hh"
 
-#define	FOE_SHOT_FREQ		75
+#define	FOE_SHOT_FREQ		75	// 50 == fucking hard
 #define	FOE_SHOT_SPEED		125
 #define FOE_SHOT_DISTANCE	250
+
+#define FOE_TYPE_THRESHOLD_1	5
+#define FOE_TYPE_THRESHOLD_2	10
+#define FOE_TYPE_THRESHOLD_3	15
+#define FOE_TYPE_THRESHOLD_4	20
 
 class Foe : public Ship
 {
 public:
     Foe()
 	{
-	    health = 55;
-	    speed = 2;
-	    foe_type = 1;	// TODO: include moar enemy types
-	    point = 100;	// TODO: include moar enemy types
-	    EndExistence();
-	}
-    Foe(int	type)
-	{
-	    health = 55;
+	    health = 25;
 	    speed = 2;
 	    firetype = 1;
-	    foe_type = type;	// TODO: include moar enemy types
-	    point = 100;	// TODO: include moar enemy types
+	    foe_type = 1;
+	    point = 50;
 	    EndExistence();
 	}
-    Foe(int	hp, int actual_speed);
+    Foe(int	type);
 
     void Init();
     void Cleanup();
@@ -46,13 +43,14 @@ public:
     void MoveDown() { ship_rect.y += speed; }
     void MoveLeft() { ship_rect.x -= speed * 3; }
     void MoveRight() { ship_rect.x += speed * 3; }
+    void MoveDownLt() { ship_rect.y+=speed*3; ship_rect.x-=speed; }
+    void MoveDownRt() { ship_rect.y+=speed*3; ship_rect.x+=speed; }
 
     // Manage movement
     void Mobility(/* Ship *ship */);
     // Manage shots nearing Player
     void Aggression(Ship *ship, std::vector<Weaponry*> *shots);
     unsigned TakesDamages(int	value);
-    void HandleCollisions(Ship	*ship);
 
     // GettersxSetters
     void setPower(int fire_power) { firetype = fire_power; }
@@ -62,10 +60,9 @@ public:
 
 private:
     int		point;
+    // FIXME: unsigned or else, technically, -1 fucks everything!
     int		foe_type;
 
-    // int		foe_freq;
-    // spaceship, ship_rect, health, speed, firetype, firepower, frequency
 };
 
 #endif /* FOE_HH_ */

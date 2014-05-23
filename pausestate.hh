@@ -32,6 +32,7 @@ private:
 
     // FIXME: wait for 'alpha fix'
     // SDL_Surface		*background;
+    // int			alpha;
 };
 
 #endif /* PAUSESTATE_HH_ */
